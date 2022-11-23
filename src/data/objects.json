@@ -1,0 +1,63 @@
+[
+    {
+        "name": "Dining Set",
+        "type": "dining_set"
+    },
+    {
+        "name": "Fairy Lights",
+        "type": "fairy_lights",
+        "position": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+        },
+        "scale": {
+            "x": 5,
+            "y": 5,
+            "z": 5
+        },
+        "rotation": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+        }
+    },
+    {
+        "name": "Table Flowers",
+        "type": "table_flowers",
+        "position": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+        },
+        "scale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+        },
+        "rotation": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+        }
+    },
+    {
+        "name": "Chandelier",
+        "type": "chandelier",
+        "position": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+        },
+        "scale": {
+            "x": 1,
+            "y": 1,
+            "z": 1
+        },
+        "rotation": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+        }
+    }
+]
