@@ -1,16 +1,14 @@
 /* eslint-disable react/no-unknown-property */
-import {
-  Environment,
-  Loader,
-  OrbitControls
-} from "@react-three/drei";
+import { Environment, Loader, OrbitControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import { useControls } from "leva";
-import React, { Suspense, useEffect, useState } from "react";
+import React, { Suspense, useState } from "react";
+import { subscribe, useSnapshot } from "valtio";
 import { Chandelier, ChandelierInstances } from "../models/Chandelier";
 import { DiningSet, DiningSetInstances } from "../models/DiningSet";
 import { FairyLights, FairyLightsInstances } from "../models/FairyLights";
 import { TableFlowers, TableFlowersInstances } from "../models/TableFlowers";
+import { sceneState } from "../store/sceneData";
 import { useSceneObjects } from "../store/useSceneObjects";
 import CameraController from "./CameraController";
 
@@ -51,19 +49,15 @@ const SceneFairyLightsObjectList = () => {
 };
 
 const SceneDiningSetObjectList = () => {
-  const { sceneObjects } = useSceneObjects();
+  const snap = useSnapshot(sceneState);
 
-  return sceneObjects
-    .filter((object) => object.type === "dining_set")
-    .map(({ id }) => {
-      return (
-        <Suspense key={id} fallback={<Loader />}>
-          <DiningSet
-            objectId={id}
-          />
-        </Suspense>
-      );
-    });
+  return Array.from(snap.sceneObjects.values())
+    .filter(({ type }) => type === "dining_set")
+    .map(({ id }) => (
+      <Suspense key={id} fallback={<Loader />}>
+        <DiningSet objectId={id} />
+      </Suspense>
+    ));
 };
 
 const SceneTableFlowersObjectList = () => {
@@ -105,8 +99,18 @@ const SceneChandelierObjectList = () => {
 };
 
 export default function MainScene() {
-  const sceneObjects = useSceneObjects((state) => state.sceneObjects);
+  // const sceneObjects = useSceneObjects((state) => state.sceneObjects);
+
+  // const snap = useSnapshot(sceneState);
   const [loadedObjects, setLoadedObjects] = useState(false);
+
+  subscribe(
+    sceneState.sceneObjects,
+    () => {
+      setLoadedObjects(true);
+    },
+    sceneState.sceneObjects
+  );
 
   const [{ envHeight, envRadius, envScale }] = useControls(
     "Env Map Settings",
@@ -131,12 +135,6 @@ export default function MainScene() {
       },
     })
   );
-
-  useEffect(() => {
-    if (sceneObjects.length !== 0) {
-      setLoadedObjects(true);
-    }
-  }, [sceneObjects]);
 
   return (
     <>

@@ -1,11 +1,12 @@
 import { Container, Heading, Wrap, WrapItem } from "@chakra-ui/react";
+import uniqueId from "lodash.uniqueid";
 import React from "react";
 import objectData from "../data/objects.json";
-import { useSceneObjects } from "../store/useSceneObjects";
+import { sceneState } from "../store/sceneData";
 import ItemCard from "./builder/ItemCard";
 
 export default function SideDrawer() {
-  const addSceneObject = useSceneObjects((state) => state.addSceneObject);
+  // const addSceneObject = useSceneObjects((state) => state.addSceneObject);
   // const setActiveObject = useActiveSceneObject(
   //   (state) => state.setActiveObject
   // );
@@ -25,7 +26,16 @@ export default function SideDrawer() {
                 //   rmSceneObject(key);
                 //   return;
                 // }
-                addSceneObject(object);
+                // addSceneObject(object);
+                const id = uniqueId();
+                
+                sceneState.sceneObjects.set(id, {
+                  id: id,
+                  name: object.name,
+                  type: object.type,
+                });
+
+                console.log(sceneState);
               }}
             />
           </WrapItem>

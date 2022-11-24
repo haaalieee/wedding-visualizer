@@ -1,8 +1,7 @@
 /* eslint-disable react/prop-types */
-import { Html, TransformControls } from "@react-three/drei";
-import React, { useState } from "react";
+import { TransformControls } from "@react-three/drei";
+import React from "react";
 import { useKey } from "react-use";
-import SideEditor from "./editor/SideEditor";
 
 export default function ObjectTransformControls({ object }) {
   const [transformMode, setTransformMode] = React.useState("translate");
@@ -40,52 +39,44 @@ export default function ObjectTransformControls({ object }) {
   // useUpdateObjectRotation(id, localRotation, updateObjectRotation);
   // useUpdateObjectScale(id, localScale, updateObjectScale);
 
-  const [objectTransformed, setObjectTransformed] = useState(object);
-
   return (
-    <>
-      <TransformControls
-        object={object}
-        mode={transformMode}
-        onObjectChange={() => {
-          setObjectTransformed(object);
-          // setObjectTransformed({...object});
-          // if (transformMode === "scale") {
-          //   console.log("scaling");
-          //   setLocalScale([object.scale.x, object.scale.y, object.scale.z]);
-          // } else if (transformMode === "rotate") {
-          //   console.log("rotating");
-          //   console.log(
-          //     "rotation " +
-          //       object.rotation.x +
-          //       object.rotation.y +
-          //       object.rotation.z
-          //   );
-          //   setLocalRotation([
-          //     object.rotation.x,
-          //     object.rotation.y,
-          //     object.rotation.z,
-          //   ]);
-          // } else {
-          //   console.log(
-          //     "positioning",
-          //     object.position.x,
-          //     object.position.y,
-          //     object.position.z
-          //   );
-          //   // setLocalPosition([
-          //   //   object.position.x,
-          //   //   object.position.y,
-          //   //   object.position.z,
-          //   // ]);
-          // }
-          // setTransformUpdate(true);
-        }}
-        onPointerMissed={() => console.log("missing")}
-      />
-      <Html>
-        <SideEditor object={objectTransformed} />
-      </Html>
-    </>
+    <TransformControls
+      object={object}
+      mode={transformMode}
+      onObjectChange={() => {
+        // setObjectTransformed({...object});
+        // if (transformMode === "scale") {
+        //   console.log("scaling");
+        //   setLocalScale([object.scale.x, object.scale.y, object.scale.z]);
+        // } else if (transformMode === "rotate") {
+        //   console.log("rotating");
+        //   console.log(
+        //     "rotation " +
+        //       object.rotation.x +
+        //       object.rotation.y +
+        //       object.rotation.z
+        //   );
+        //   setLocalRotation([
+        //     object.rotation.x,
+        //     object.rotation.y,
+        //     object.rotation.z,
+        //   ]);
+        // } else {
+        //   console.log(
+        //     "positioning",
+        //     object.position.x,
+        //     object.position.y,
+        //     object.position.z
+        //   );
+        //   // setLocalPosition([
+        //   //   object.position.x,
+        //   //   object.position.y,
+        //   //   object.position.z,
+        //   // ]);
+        // }
+        // setTransformUpdate(true);
+      }}
+      onPointerMissed={() => console.log("missing")}
+    />
   );
 }
