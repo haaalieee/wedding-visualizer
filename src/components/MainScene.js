@@ -2,112 +2,21 @@
 import { Loader, OrbitControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 // import { useControls } from "leva";
-import React, { Suspense, useState } from "react";
-import { subscribe, useSnapshot } from "valtio";
-import { Chandelier, ChandelierInstances } from "../models/Chandelier";
-import { DiningSet, DiningSetInstances } from "../models/DiningSet";
-import { FairyLights, FairyLightsInstances } from "../models/FairyLights";
-import { TableFlowers, TableFlowersInstances } from "../models/TableFlowers";
+import React, { Suspense, useEffect, useRef, useState } from "react";
+import { subscribe } from "valtio";
+import {
+  ChandelierInstances,
+  DiningSetInstances,
+  FairyLightsInstances, TableFlowersInstances
+} from "../models";
 import { sceneStateStore } from "../store/sceneData";
-import { useSceneObjects } from "../store/useSceneObjects";
 import CameraController from "./CameraController";
-
-// const SceneObjectList = () => {
-//   const sceneObjects = useSceneObjects((state) => state.sceneObjects);
-
-//   return sceneObjects.map(({ id, type, position, rotation }) => (
-//     <Suspense key={id} fallback={<Loader />}>
-//       {/* <Model
-//           url={file}
-//           id={id}
-//           position={[position.x, position.y, position.z]}
-//           rotation={[rotation.x, rotation.y, rotation.z]}
-//           objGeometry={objGeometry}
-//           objMaterial={objMaterial}
-//         /> */}
-//     </Suspense>
-//   ));
-// };
-
-const SceneFairyLightsObjectList = () => {
-  const { sceneObjects } = useSceneObjects();
-
-  return sceneObjects
-    .filter((object) => object.type === "fairy_lights")
-    .map(({ id, position, rotation, scale }) => {
-      return (
-        <Suspense key={id} fallback={<Loader />}>
-          <FairyLights
-            objectId={id}
-            position={[position.x, position.y, position.z]}
-            rotation={[rotation.x, rotation.y, rotation.z]}
-            scale={[scale.x, scale.y, scale.z]}
-          />
-        </Suspense>
-      );
-    });
-};
-
-const SceneDiningSetObjectList = () => {
-  const snap = useSnapshot(sceneStateStore);
-
-  return Array.from(snap.sceneObjects.values())
-    .filter(({ type }) => type === "dining_set")
-    .map(({ id, scene, nodes }) => (
-      <Suspense key={id} fallback={<Loader />}>
-        <DiningSet
-          objectId={id}
-          position={[scene.position.x, scene.position.y, scene.position.x]}
-          rotation={[scene.rotation.x, scene.rotation.y, scene.rotation.x]}
-          scale={[scene.scale.x, scene.scale.y, scene.scale.x]}
-          nodes={nodes}
-        />
-      </Suspense>
-    ));
-};
-
-const SceneTableFlowersObjectList = () => {
-  const { sceneObjects } = useSceneObjects();
-
-  return sceneObjects
-    .filter((object) => object.type === "table_flowers")
-    .map(({ id, position, rotation, scale }) => {
-      return (
-        <Suspense key={id} fallback={<Loader />}>
-          <TableFlowers
-            objectId={id}
-            position={[position.x, position.y, position.z]}
-            rotation={[rotation.x, rotation.y, rotation.z]}
-            scale={[scale.x, scale.y, scale.z]}
-          />
-        </Suspense>
-      );
-    });
-};
-
-const SceneChandelierObjectList = () => {
-  const { sceneObjects } = useSceneObjects();
-
-  return sceneObjects
-    .filter((object) => object.type === "chandelier")
-    .map(({ id, position, rotation, scale }) => {
-      return (
-        <Suspense key={id} fallback={<Loader />}>
-          <Chandelier
-            objectId={id}
-            position={[position.x, position.y, position.z]}
-            rotation={[rotation.x, rotation.y, rotation.z]}
-            scale={[scale.x, scale.y, scale.z]}
-          />
-        </Suspense>
-      );
-    });
-};
+import {
+  SceneChandelierObjectList, SceneDiningSetObjectList, SceneFairyLightsObjectList,
+  SceneTableFlowersObjectList
+} from "./sceneList";
 
 export default function MainScene() {
-  // const sceneObjects = useSceneObjects((state) => state.sceneObjects);
-
-  // const snap = useSnapshot(sceneStateStore);
   const [loadedObjects, setLoadedObjects] = useState(false);
 
   subscribe(
@@ -141,6 +50,14 @@ export default function MainScene() {
   //     },
   //   })
   // );
+
+  const gridRef = useRef();
+
+  useEffect(()=>{
+    if(gridRef.current) {
+      console.log(gridRef.current)
+    }
+  },[gridRef.current])
 
   return (
     <>
@@ -188,7 +105,7 @@ export default function MainScene() {
           ground={{ height: envHeight, radius: envRadius, scale: envScale }}
         /> */}
         <CameraController />
-        <gridHelper args={[150, 50, "blue", "hotpink"]} />
+        <gridHelper args={[150, 50, "blue", "hotpink"]} ref={gridRef} />
       </Canvas>
     </>
   );

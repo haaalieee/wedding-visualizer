@@ -11,10 +11,9 @@ title: Lustre Luxe
 
 import { Merged, useGLTF } from "@react-three/drei";
 import React, { createContext, useContext, useMemo, useRef } from "react";
-import { useBoolean } from "react-use";
+import { useToggle } from "react-use";
 import ObjectTransformControls from "../components/ObjectTransformControls";
-import { useSceneObjects } from "../store/useSceneObjects";
-import { useUpdateObjectPosition } from "../utils/hooks";
+import { sceneActions, sceneStateStore } from "../store/sceneData";
 
 const context = createContext();
 export function ChandelierInstances({ children, ...props }) {
@@ -117,24 +116,36 @@ export function ChandelierInstances({ children, ...props }) {
 export function Chandelier(props) {
   const instances = useContext(context);
 
-  const [active, toggleActive] = useBoolean(false);
-  const [localPosition, setLocalPosition] = React.useState(props.position);
-  const { updateObjectPosition } = useSceneObjects();
-  const objectRef = useRef();
+  const [active, toggleActive] = useToggle(false);
 
-  useUpdateObjectPosition(props.id, localPosition, updateObjectPosition);
+  const objectRef = useRef();
 
   return (
     <>
       <group
-        {...props}
+          {...props}
         dispose={null}
-        onClick={() => {
-          toggleActive();
+        onClick={(e) => {
+          e.stopPropagation();
+          // setActiveObject(props.objectId);
+          // setActiveChildObject(props.objectId, e.object.uuid);
+          // setTransformUpdate(true);
+          sceneActions.setActiveObject(props.objectId);
+          sceneActions.setActiveMaterial(
+            e.object.instance.current.material.name
+          );
+          toggleActive(true);
         }}
         onPointerMissed={(e) => {
           e.type === "click" && toggleActive(false);
+          sceneActions.removeActiveObject();
+          console.log(sceneStateStore);
+          // rmActiveObject(props.objectId);
+          // setTransformUpdate(false);
         }}
+        position={[0,0,0]}
+        rotation={[0,0,0]}
+        scale={[1,1,1]}
         ref={objectRef}
       >
         <group rotation={[-Math.PI / 2, 0, 0]}>
@@ -144,20 +155,20 @@ export function Chandelier(props) {
               rotation={[-Math.PI / 2, 0, 0]}
             >
               <group position={[0.01, 0.01, 1.9]} scale={[0.27, 0.27, 2.21]}>
-                <instances.CircleMaterial />
+                <instances.CircleMaterial color={props.nodes[0]}/>
               </group>
               <group position={[0.01, 0, 2.62]} scale={0.24}>
-                <instances.ConeMaterial />
+                <instances.ConeMaterial color={props.nodes[0]}/>
               </group>
               <group position={[0.01, 0.01, -0.78]} scale={[1, 1, 1.88]}>
-                <instances.ObjectMaterial />
+                <instances.ObjectMaterial color={props.nodes[0]}/>
               </group>
               <group
                 position={[0.01, 0.01, -2.22]}
                 rotation={[-Math.PI / 2, -1.4, 0]}
               >
                 <group position={[-1.54, -1.29, 0]}>
-                  <instances.GeoSphereMaterial />
+                  <instances.GeoSphereMaterial color={props.nodes[0]}/>
                 </group>
               </group>
               <group
@@ -170,7 +181,7 @@ export function Chandelier(props) {
                   rotation={[-2.44, Math.PI / 2, 0]}
                   scale={0.05}
                 >
-                  <instances.GeoSphereMaterial1 />
+                  <instances.GeoSphereMaterial1 color={props.nodes[0]} />
                 </group>
               </group>
               <group
@@ -183,7 +194,7 @@ export function Chandelier(props) {
                   rotation={[-2.27, Math.PI / 2, 0]}
                   scale={0.05}
                 >
-                  <instances.GeoSphereMaterial2 />
+                  <instances.GeoSphereMaterial2 color={props.nodes[0]} />
                 </group>
               </group>
               <group
@@ -196,7 +207,7 @@ export function Chandelier(props) {
                   rotation={[-2.09, Math.PI / 2, 0]}
                   scale={0.05}
                 >
-                  <instances.GeoSphereMaterial3 />
+                  <instances.GeoSphereMaterial3 color={props.nodes[0]} />
                 </group>
               </group>
               <group
@@ -209,7 +220,7 @@ export function Chandelier(props) {
                   rotation={[-2.62, Math.PI / 2, 0]}
                   scale={0.05}
                 >
-                  <instances.GeoSphereMaterial4 />
+                  <instances.GeoSphereMaterial4 color={props.nodes[0]} />
                 </group>
               </group>
               <group
@@ -217,7 +228,7 @@ export function Chandelier(props) {
                 rotation={[Math.PI / 2, -0.96, -Math.PI / 2]}
               >
                 <group position={[0.93, 0.04, 0.24]}>
-                  <instances.Line />
+                  <instances.Line color={props.nodes[0]} />
                 </group>
               </group>
               <group
@@ -225,216 +236,216 @@ export function Chandelier(props) {
                 rotation={[Math.PI / 2, -0.96, -Math.PI / 2]}
               >
                 <group position={[0.93, 0.04, 0.24]}>
-                  <instances.LineMaterial />
+                  <instances.LineMaterial color={props.nodes[0]}/>
                 </group>
               </group>
               <group position={[0.01, -0.44, -2.2]} scale={0.07}>
-                <instances.GeoSphereMaterial5 />
+                <instances.GeoSphereMaterial5 color={props.nodes[0]} />
               </group>
               <group position={[0.54, -1.44, -0.92]} scale={0.07}>
-                <instances.GeoSphereMaterial6 />
+                <instances.GeoSphereMaterial6 color={props.nodes[0]} />
               </group>
               <group position={[0.78, -1.33, -0.92]} scale={0.07}>
-                <instances.GeoSphereMaterial7 />
+                <instances.GeoSphereMaterial7 color={props.nodes[0]} />
               </group>
               <group position={[1.19, -0.99, -0.93]} scale={0.07}>
-                <instances.GeoSphereMaterial8 />
+                <instances.GeoSphereMaterial8 color={props.nodes[0]} />
               </group>
               <group position={[1.34, -0.76, -0.92]} scale={0.07}>
-                <instances.GeoSphereMaterial9 />
+                <instances.GeoSphereMaterial9 color={props.nodes[0]} />
               </group>
               <group position={[1.53, -0.26, -0.92]} scale={0.07}>
-                <instances.GeoSphereMaterial10 />
+                <instances.GeoSphereMaterial10 color={props.nodes[0]} />
               </group>
               <group position={[1.46, 0.54, -0.92]} scale={0.07}>
-                <instances.GeoSphereMaterial11 />
+                <instances.GeoSphereMaterial11 color={props.nodes[0]} />
               </group>
               <group position={[1.19, 1, -0.93]} scale={0.07}>
                 <instances.GeoSphereMaterial12 />
               </group>
               <group position={[0.78, 1.34, -0.92]} scale={0.07}>
-                <instances.GeoSphereMaterial13 />
+                <instances.GeoSphereMaterial13 color={props.nodes[0]} />
               </group>
               <group position={[0.54, 1.46, -0.92]} scale={0.07}>
-                <instances.GeoSphereMaterial14 />
+                <instances.GeoSphereMaterial14 color={props.nodes[0]} />
               </group>
               <group position={[0.01, 1.55, -0.92]} scale={0.07}>
-                <instances.GeoSphereMaterial15 />
+                <instances.GeoSphereMaterial15 color={props.nodes[0]} />
               </group>
               <group position={[-0.52, 1.46, -0.92]} scale={0.07}>
-                <instances.GeoSphereMaterial16 />
+                <instances.GeoSphereMaterial16 color={props.nodes[0]} />
               </group>
               <group position={[-0.98, 1.19, -0.92]} scale={0.07}>
-                <instances.GeoSphereMaterial17 />
+                <instances.GeoSphereMaterial17 color={props.nodes[0]} />
               </group>
               <group position={[-1.33, 0.78, -0.92]} scale={0.07}>
-                <instances.GeoSphereMaterial18 />
+                <instances.GeoSphereMaterial18 color={props.nodes[0]} />
               </group>
               <group position={[-1.51, 0.28, -0.92]} scale={0.07}>
-                <instances.GeoSphereMaterial19 />
+                <instances.GeoSphereMaterial19 color={props.nodes[0]} />
               </group>
               <group position={[-1.51, -0.26, -0.92]} scale={0.07}>
-                <instances.GeoSphereMaterial20 />
+                <instances.GeoSphereMaterial20 color={props.nodes[0]} />
               </group>
               <group position={[-1.44, -0.52, -0.92]} scale={0.07}>
-                <instances.GeoSphereMaterial21 />
+                <instances.GeoSphereMaterial21 color={props.nodes[0]} />
               </group>
               <group position={[-1.33, -0.76, -0.92]} scale={0.07}>
-                <instances.GeoSphereMaterial22 />
+                <instances.GeoSphereMaterial22 color={props.nodes[0]} />
               </group>
               <group position={[-1.18, -0.98, -0.92]} scale={0.07}>
-                <instances.GeoSphereMaterial23 />
+                <instances.GeoSphereMaterial23 color={props.nodes[0]} />
               </group>
               <group position={[-0.98, -1.18, -0.92]} scale={0.07}>
-                <instances.GeoSphereMaterial24 />
+                <instances.GeoSphereMaterial24 color={props.nodes[0]} />
               </group>
               <group position={[-0.76, -1.33, -0.93]} scale={0.07}>
-                <instances.GeoSphereMaterial25 />
+                <instances.GeoSphereMaterial25 color={props.nodes[0]} />
               </group>
               <group position={[-0.52, -1.44, -0.92]} scale={0.07}>
-                <instances.GeoSphereMaterial26 />
+                <instances.GeoSphereMaterial26 color={props.nodes[0]} />
               </group>
               <group position={[0.08, -0.38, -2.21]} scale={0.07}>
-                <instances.GeoSphereMaterial27 />
+                <instances.GeoSphereMaterial27 color={props.nodes[0]} />
               </group>
               <group position={[0.3, -0.34, -2.2]} scale={0.07}>
-                <instances.GeoSphereMaterial28 />
+                <instances.GeoSphereMaterial28 color={props.nodes[0]} />
               </group>
               <group position={[0.38, -0.13, -2.21]} scale={0.07}>
-                <instances.GeoSphereMaterial29 />
+                <instances.GeoSphereMaterial29 color={props.nodes[0]} />
               </group>
               <group position={[0.45, 0.01, -2.2]} scale={0.07}>
-                <instances.GeoSphereMaterial30 />
+                <instances.GeoSphereMaterial30 color={props.nodes[0]} />
               </group>
               <group position={[0.4, 0.08, -2.21]} scale={0.07}>
-                <instances.GeoSphereMaterial31 />
+                <instances.GeoSphereMaterial31 color={props.nodes[0]} />
               </group>
               <group position={[0.36, 0.21, -2.21]} scale={0.07}>
-                <instances.GeoSphereMaterial32 />
+                <instances.GeoSphereMaterial32 color={props.nodes[0]} />
               </group>
               <group position={[0.29, 0.34, -2.21]} scale={0.07}>
-                <instances.GeoSphereMaterial33 />
+                <instances.GeoSphereMaterial33 color={props.nodes[0]} />
               </group>
               <group position={[0.08, 0.44, -2.21]} scale={0.07}>
-                <instances.GeoSphereMaterial34 />
+                <instances.GeoSphereMaterial34 color={props.nodes[0]} />
               </group>
               <group position={[-0.06, 0.4, -2.21]} scale={0.07}>
-                <instances.GeoSphereMaterial35 />
+                <instances.GeoSphereMaterial35 color={props.nodes[0]} />
               </group>
               <group position={[-0.2, 0.37, -2.21]} scale={0.07}>
-                <instances.GeoSphereMaterial36 />
+                <instances.GeoSphereMaterial36 color={props.nodes[0]} />
               </group>
               <group position={[-0.31, 0.27, -2.21]} scale={0.07}>
-                <instances.GeoSphereMaterial37 />
+                <instances.GeoSphereMaterial37 color={props.nodes[0]} />
               </group>
               <group position={[-0.39, 0.15, -2.21]} scale={0.07}>
-                <instances.GeoSphereMaterial38 />
+                <instances.GeoSphereMaterial38 color={props.nodes[0]} />
               </group>
               <group position={[-0.44, 0.01, -2.2]} scale={0.07}>
-                <instances.GeoSphereMaterial39 />
+                <instances.GeoSphereMaterial39 color={props.nodes[0]} />
               </group>
               <group position={[-1.35, -0.49, -0.75]} scale={0.07}>
-                <instances.GeoSphereMaterial40 />
+                <instances.GeoSphereMaterial40 color={props.nodes[0]} />
               </group>
               <group position={[1.36, -0.49, -0.75]} scale={0.07}>
-                <instances.GeoSphereMaterial41 />
+                <instances.GeoSphereMaterial41 color={props.nodes[0]} />
               </group>
               <group position={[1.12, -0.93, -0.76]} scale={0.07}>
-                <instances.GeoSphereMaterial42 />
+                <instances.GeoSphereMaterial42 color={props.nodes[0]} />
               </group>
               <group position={[0.94, -1.1, -0.75]} scale={0.07}>
-                <instances.GeoSphereMaterial43 />
+                <instances.GeoSphereMaterial43 color={props.nodes[0]} />
               </group>
               <group position={[0.73, -1.24, -0.75]} scale={0.07}>
-                <instances.GeoSphereMaterial44 />
+                <instances.GeoSphereMaterial44 color={props.nodes[0]} />
               </group>
               <group position={[0.5, -1.35, -0.75]} scale={0.07}>
-                <instances.GeoSphereMaterial45 />
+                <instances.GeoSphereMaterial45 color={props.nodes[0]} />
               </group>
               <group position={[0.26, -1.41, -0.75]} scale={0.07}>
-                <instances.GeoSphereMaterial46 />
+                <instances.GeoSphereMaterial46 color={props.nodes[0]} />
               </group>
               <group position={[0.01, -1.45, -0.76]} scale={0.07}>
-                <instances.GeoSphereMaterial47 />
+                <instances.GeoSphereMaterial47 color={props.nodes[0]} />
               </group>
               <group position={[-0.24, -1.42, -0.76]} scale={0.07}>
-                <instances.GeoSphereMaterial48 />
+                <instances.GeoSphereMaterial48 color={props.nodes[0]} />
               </group>
               <group position={[-0.49, -1.36, -0.76]} scale={0.07}>
-                <instances.GeoSphereMaterial49 />
+                <instances.GeoSphereMaterial49 color={props.nodes[0]} />
               </group>
               <group position={[0.26, 1.44, -0.76]} scale={0.07}>
-                <instances.GeoSphereMaterial50 />
+                <instances.GeoSphereMaterial50 color={props.nodes[0]} />
               </group>
               <group position={[-0.24, 1.42, -0.75]} scale={0.07}>
-                <instances.GeoSphereMaterial51 />
+                <instances.GeoSphereMaterial51 color={props.nodes[0]} />
               </group>
               <group position={[-0.71, 1.26, -0.75]} scale={0.07}>
-                <instances.GeoSphereMaterial52 />
+                <instances.GeoSphereMaterial52 color={props.nodes[0]} />
               </group>
               <group position={[-1.1, 0.93, -0.75]} scale={0.07}>
                 <instances.GeoSphereMaterial53 />
               </group>
               <group position={[-1.35, 0.5, -0.75]} scale={0.07}>
-                <instances.GeoSphereMaterial54 />
+                <instances.GeoSphereMaterial54 color={props.nodes[0]} />
               </group>
               <group position={[-1.44, 0.01, -0.75]} scale={0.07}>
-                <instances.GeoSphereMaterial55 />
+                <instances.GeoSphereMaterial55 color={props.nodes[0]} />
               </group>
               <group position={[0.73, 1.26, -0.75]} scale={0.07}>
-                <instances.GeoSphereMaterial56 />
+                <instances.GeoSphereMaterial56 color={props.nodes[0]} />
               </group>
               <group position={[1.11, 0.94, -0.75]} scale={0.07}>
-                <instances.GeoSphereMaterial57 />
+                <instances.GeoSphereMaterial57 color={props.nodes[0]} />
               </group>
               <group position={[1.36, 0.5, -0.75]} scale={0.07}>
-                <instances.GeoSphereMaterial58 />
+                <instances.GeoSphereMaterial58 color={props.nodes[0]} />
               </group>
               <group position={[1.45, 0.01, -0.75]} scale={0.07}>
-                <instances.GeoSphereMaterial59 />
+                <instances.GeoSphereMaterial59 color={props.nodes[0]} />
               </group>
               <group position={[-0.41, -0.07, 1.72]} scale={0.07}>
-                <instances.GeoSphereMaterial60 />
+                <instances.GeoSphereMaterial60 color={props.nodes[0]} />
               </group>
               <group position={[-0.41, 0.08, 1.71]} scale={0.07}>
-                <instances.GeoSphereMaterial61 />
+                <instances.GeoSphereMaterial61 color={props.nodes[0]} />
               </group>
               <group position={[-0.36, 0.22, 1.73]} scale={0.07}>
-                <instances.GeoSphereMaterial62 />
+                <instances.GeoSphereMaterial62 color={props.nodes[0]} />
               </group>
               <group position={[-0.26, 0.33, 1.72]} scale={0.07}>
-                <instances.GeoSphereMaterial63 />
+                <instances.GeoSphereMaterial63 color={props.nodes[0]} />
               </group>
               <group position={[-0.14, 0.4, 1.67]} scale={0.07}>
-                <instances.GeoSphereMaterial64 />
+                <instances.GeoSphereMaterial64 color={props.nodes[0]} />
               </group>
               <group position={[0.01, 0.43, 1.71]} scale={0.07}>
-                <instances.GeoSphereMaterial65 />
+                <instances.GeoSphereMaterial65 color={props.nodes[0]} />
               </group>
               <group position={[0.15, 0.4, 1.71]} scale={0.07}>
-                <instances.GeoSphereMaterial66 />
+                <instances.GeoSphereMaterial66 color={props.nodes[0]} />
               </group>
               <group position={[0.28, 0.33, 1.73]} scale={0.07}>
-                <instances.GeoSphereMaterial67 />
+                <instances.GeoSphereMaterial67 color={props.nodes[0]} />
               </group>
               <group position={[0.37, 0.22, 1.7]} scale={0.07}>
-                <instances.GeoSphereMaterial68 />
+                <instances.GeoSphereMaterial68 color={props.nodes[0]} />
               </group>
               <group position={[0.42, 0.08, 1.74]} scale={0.07}>
-                <instances.GeoSphereMaterial69 />
+                <instances.GeoSphereMaterial69 color={props.nodes[0]} />
               </group>
               <group position={[0.42, -0.07, 1.73]} scale={0.07}>
-                <instances.GeoSphereMaterial70 />
+                <instances.GeoSphereMaterial70 color={props.nodes[0]} />
               </group>
               <group position={[0.37, -0.2, 1.7]} scale={0.07}>
-                <instances.GeoSphereMaterial71 />
+                <instances.GeoSphereMaterial71 color={props.nodes[0]} />
               </group>
               <group
                 position={[1.58, 1.57, 0.2]}
                 rotation={[Math.PI / 2, -0.96, -Math.PI / 2]}
               >
                 <group position={[0.93, 0.04, 0.24]}>
-                  <instances.LineMaterial />
+                  <instances.LineMaterial color={props.nodes[0]}/>
                 </group>
               </group>
               <group
@@ -442,7 +453,7 @@ export function Chandelier(props) {
                 rotation={[Math.PI / 2, -0.96, -Math.PI / 2]}
               >
                 <group position={[0.93, 0.04, 0.24]}>
-                  <instances.LineMaterial />
+                  <instances.LineMaterial color={props.nodes[0]}/>
                 </group>
               </group>
               <group
@@ -450,7 +461,7 @@ export function Chandelier(props) {
                 rotation={[Math.PI / 2, -0.96, -Math.PI / 2]}
               >
                 <group position={[0.93, 0.04, 0.24]}>
-                  <instances.LineMaterial />
+                  <instances.LineMaterial color={props.nodes[0]}/>
                 </group>
               </group>
               <group
@@ -458,7 +469,7 @@ export function Chandelier(props) {
                 rotation={[Math.PI / 2, -0.96, -Math.PI / 2]}
               >
                 <group position={[0.93, 0.04, 0.24]}>
-                  <instances.LineMaterial />
+                  <instances.LineMaterial color={props.nodes[0]}/>
                 </group>
               </group>
               <group
@@ -466,7 +477,7 @@ export function Chandelier(props) {
                 rotation={[Math.PI / 2, -0.96, -Math.PI / 2]}
               >
                 <group position={[0.93, 0.04, 0.24]}>
-                  <instances.LineMaterial />
+                  <instances.LineMaterial color={props.nodes[0]}/>
                 </group>
               </group>
               <group
@@ -474,7 +485,7 @@ export function Chandelier(props) {
                 rotation={[Math.PI / 2, -0.96, -Math.PI / 2]}
               >
                 <group position={[0.93, 0.04, 0.24]}>
-                  <instances.LineMaterial />
+                  <instances.LineMaterial color={props.nodes[0]}/>
                 </group>
               </group>
               <group
@@ -483,7 +494,7 @@ export function Chandelier(props) {
                 scale={0.97}
               >
                 <group position={[0, 1.94, 0]}>
-                  <instances.BougeoiresMaterial />
+                  <instances.BougeoiresMaterial color={props.nodes[0]}/>
                 </group>
               </group>
               <group
@@ -492,7 +503,7 @@ export function Chandelier(props) {
                 scale={0.97}
               >
                 <group position={[0, 1.94, 0]}>
-                  <instances.BougiescireMaterial />
+                  <instances.BougiescireMaterial color={props.nodes[0]}/>
                 </group>
               </group>
               <group
@@ -501,7 +512,7 @@ export function Chandelier(props) {
                 scale={0.97}
               >
                 <group position={[0, 1.94, 0]}>
-                  <instances.BougiesflammeMaterial />
+                  <instances.BougiesflammeMaterial color={props.nodes[0]}/>
                 </group>
               </group>
               <group
@@ -510,18 +521,18 @@ export function Chandelier(props) {
                 scale={1.31}
               >
                 <group position={[0.65, 0.02, 0.21]}>
-                  <instances.LineMaterial />
+                  <instances.LineMaterial color={props.nodes[0]}/>
                 </group>
               </group>
               <group position={[0.01, 0.01, -2.13]}>
-                <instances.CylinderMaterial />
+                <instances.CylinderMaterial color={props.nodes[0]}/>
               </group>
               <group
                 position={[0.01, 2.23, 0.2]}
                 rotation={[Math.PI / 2, -0.96, -Math.PI / 2]}
               >
                 <group position={[0.93, 0.04, 0.24]}>
-                  <instances.LineMaterial />
+                  <instances.LineMaterial color={props.nodes[0]}/>
                 </group>
               </group>
             </group>
@@ -530,8 +541,8 @@ export function Chandelier(props) {
       </group>
       {active && (
         <ObjectTransformControls
+          id={props.objectId}
           object={objectRef.current}
-          setLocalPosition={() => setLocalPosition}
         />
       )}
     </>

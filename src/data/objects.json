@@ -3,19 +3,19 @@
     "name": "Dining Set",
     "type": "dining_set",
     "position": {
-        "x": 0,
-        "y": 0,
-        "z": 0
+      "x": 0,
+      "y": 0,
+      "z": 0
     },
     "rotation": {
-        "x": 0,
-        "y": 0,
-        "z": 0
+      "x": 0,
+      "y": 0,
+      "z": 0
     },
     "scale": {
-        "x": 4,
-        "y": 4,
-        "z": 4
+      "x": 4,
+      "y": 4,
+      "z": 4
     },
     "nodes": {
       "Body1__0": "#ffffff",
@@ -29,14 +29,74 @@
   },
   {
     "name": "Fairy Lights",
-    "type": "fairy_lights"
+    "type": "fairy_lights",
+    "position": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "rotation": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "scale": {
+      "x": 4,
+      "y": 4,
+      "z": 4
+    },
+    "nodes": {
+      "Emissive": "#ffffff",
+      "Metal": "#ffffff",
+      "Cable": "#ffffff",
+      "Socket": "#ffffff"
+    }
   },
   {
     "name": "Flowers",
-    "type": "table_flowers"
+    "type": "table_flowers",
+    "position": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "rotation": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "scale": {
+      "x": 4,
+      "y": 4,
+      "z": 4
+    },
+    "nodes": {
+      "flowers_magnolia": "#ffffff",
+      "flowers_magnolia_bowl": "#ffffff",
+      "flowers_magnolia_stem": "#ffffff",
+      "flowers_magnolia_water": "#ffffff"
+    }
   },
   {
     "name": "Chandelier",
-    "type": "chandelier"
+    "type": "chandelier",
+    "position": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "rotation": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "scale": {
+      "x": 4,
+      "y": 4,
+      "z": 4
+    },
+    "nodes": {
+      "Line089__0": "#ffffff"
+    }
   }
 ]

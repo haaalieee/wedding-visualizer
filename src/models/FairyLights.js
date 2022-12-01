@@ -12,10 +12,9 @@ title: Fairy Lights
 
 import { Merged, useGLTF } from "@react-three/drei";
 import React, { createContext, useContext, useMemo, useRef } from "react";
-import { useBoolean } from "react-use";
+import { useToggle } from "react-use";
 import ObjectTransformControls from "../components/ObjectTransformControls";
-import { useSceneObjects } from "../store/useSceneObjects";
-import { useUpdateObjectPosition } from "../utils/hooks";
+import { sceneActions, sceneStateStore } from "../store/sceneData";
 
 const context = createContext();
 export function FairyLightsInstances({ children, ...props }) {
@@ -49,53 +48,66 @@ export function FairyLightsInstances({ children, ...props }) {
 export function FairyLights(props) {
   const instances = useContext(context);
 
-  const [active, toggleActive] = useBoolean(false);
-  const [localPosition, setLocalPosition] = React.useState(props.position);
-  const { updateObjectPosition } = useSceneObjects();
-  const objectRef = useRef();
+  const [active, toggleActive] = useToggle(false);
 
-  useUpdateObjectPosition(props.id, localPosition, updateObjectPosition);
+  const objectRef = useRef();
 
   return (
     <>
       <group
         {...props}
         dispose={null}
-        onClick={() => {
-          toggleActive();
+        onClick={(e) => {
+          e.stopPropagation();
+          // setActiveObject(props.objectId);
+          // setActiveChildObject(props.objectId, e.object.uuid);
+          // setTransformUpdate(true);
+          sceneActions.setActiveObject(props.objectId);
+          // console.log(e.object.instance.current.material.name)
+          sceneActions.setActiveMaterial(
+            e.object.instance.current.material.name
+          );
+          toggleActive(true);
         }}
         onPointerMissed={(e) => {
           e.type === "click" && toggleActive(false);
+          sceneActions.removeActiveObject();
+          console.log(sceneStateStore);
+          // rmActiveObject(props.objectId);
+          // setTransformUpdate(false);
         }}
+        position={[0, 0, 0]}
+        rotation={[0, 0, 0]}
+        scale={[4, 4, 4]}
         ref={objectRef}
       >
         <group rotation={[-Math.PI / 2, 0, 0]}>
           <group rotation={[Math.PI / 2, 0, 0]}>
             <group position={[-2.02, 0.68, 1]}>
-              <instances.Object />
-              <instances.Object1 />
-              <instances.Object2 />
-              <instances.Object3 />
+              <instances.Object color={props.nodes.Emissive}/>
+              <instances.Object1 color={props.nodes.Metal}/>
+              <instances.Object2 color={props.nodes.Cable}/>
+              <instances.Object3 color={props.nodes.Socket}/>
             </group>
             <group position={[-2.02, 0.68, 0]}>
-              <instances.Object4 />
-              <instances.Object5 />
-              <instances.Object6 />
-              <instances.Object7 />
+              <instances.Object4 color={props.nodes.Emissive}/>
+              <instances.Object5 color={props.nodes.Metal}/>
+              <instances.Object6 color={props.nodes.Cable}/>
+              <instances.Object7 color={props.nodes.Socket}/>
             </group>
             <group position={[-2.02, 0.68, -1]}>
-              <instances.Object8 />
-              <instances.Object9 />
-              <instances.Object10 />
-              <instances.Object11 />
+              <instances.Object8 color={props.nodes.Emissive}/>
+              <instances.Object9 color={props.nodes.Metal}/>
+              <instances.Object10 color={props.nodes.Cable}/>
+              <instances.Object11 color={props.nodes.Socket}/>
             </group>
           </group>
         </group>
       </group>
       {active && (
         <ObjectTransformControls
+          id={props.objectId}
           object={objectRef.current}
-          setLocalPosition={() => setLocalPosition}
         />
       )}
     </>

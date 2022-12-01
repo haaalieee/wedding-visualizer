@@ -1,9 +1,9 @@
 import { Grid, GridItem } from "@chakra-ui/react";
 import React from "react";
+import { useSnapshot } from "valtio";
+import { SideEditor } from "./components/editor";
 import MainScene from "./components/MainScene";
 import SideDrawer from "./components/SideDrawer";
-import SideEditor from "./components/editor/SideEditor";
-import { useSnapshot } from "valtio";
 import { sceneStateStore } from "./store/sceneData";
 
 export default function App() {

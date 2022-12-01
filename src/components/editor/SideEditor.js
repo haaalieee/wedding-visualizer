@@ -4,26 +4,10 @@ import React from "react";
 import { HexColorPicker } from "react-colorful";
 import { useSnapshot } from "valtio";
 import { sceneStateStore } from "../../store/sceneData";
-import InputCategoryLabel from "./InputCategoryLabel";
-import InputEditor from "./InputEditor";
+import { InputCategoryLabel, InputEditor } from "../editor";
 
-export default function SideEditor() {
-  // const [localPosition, setLocalPosition] = useState({ x: 0, y: 0, z: 0 });
+export function SideEditor() {
 
-  // subscribe(
-  //   transformStore.transformUpdate,
-  //   () => {
-  //     sceneActions.getActiveObject();
-  //   },
-  //   transformStore.transformUpdate
-  // );
-
-  // useEffect(() => {
-  //   if (transformUpdate) {
-  //     console.log("i'm transforming");
-  //     sceneActions.getActiveObject();
-  //   }
-  // }, [transformUpdate]);
   const snap = useSnapshot(sceneStateStore);
   const activeId = snap.current.id;
   const activeMaterial = snap.current.material;

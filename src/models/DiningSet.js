@@ -74,7 +74,9 @@ export function DiningSet(props) {
           // setTransformUpdate(true);
           sceneActions.setActiveObject(props.objectId);
           // console.log(e.object.instance.current.material.name)
-          sceneActions.setActiveMaterial(e.object.instance.current.material.name);
+          sceneActions.setActiveMaterial(
+            e.object.instance.current.material.name
+          );
           toggleActive(true);
         }}
         onPointerMissed={(e) => {
@@ -84,32 +86,51 @@ export function DiningSet(props) {
           // rmActiveObject(props.objectId);
           // setTransformUpdate(false);
         }}
+        position={[0,0,0]}
+        rotation={[0,0,0]}
+        scale={[4,4,4]}
         ref={objectRef}
       >
-        <instances.Body color={props.nodes.Body1__0}/>
-        <instances.BodyPolyurethane color={props.nodes.Polyurethane}/>
-        <instances.BodyDMahoganyGlossy color={props.nodes['3D_Mahogany_-_Glossy']}/>
-        <instances.BodyMirror color={props.nodes.Mirror}/>
-        <instances.BodyGlassMediumColor color={props.nodes['Glass_-_Medium_Color']}/>
-        <instances.BodyDMahoganyGlossy1 color={props.nodes['3D_Mahogany_-_Glossy']}/>
-        <instances.Body1 color={props.nodes.Body1__0}/>
-        <instances.BodyPolyurethane1 color={props.nodes.Polyurethane}/>
-        <instances.Body2 color={props.nodes.Body1__0}/>
-        <instances.BodyPolyurethane2 color={props.nodes.Polyurethane}/>
-        <instances.Body3 color={props.nodes.Body1__0}/>
-        <instances.BodyPolyurethane3 color={props.nodes.Polyurethane}/>
-        <instances.Body4 color={props.nodes.Body1__0}/>
-        <instances.BodyPolyurethane4 color={props.nodes.Polyurethane}/>
-        <instances.BodyOpaque color={props.nodes.Opaque152170175}/>
-        <instances.BodyOpaque1 color={props.nodes.Opaque152170175}/>
-        <instances.BodyOpaque2 color={props.nodes.Opaque152170175}/>
-        <instances.BodyOpaque3 color={props.nodes.Opaque152170175}/>
-        <instances.BodyOpaque4 color={props.nodes.Opaque152170175}/>
-        <instances.BodyGlassLightColor color={props.nodes['Glass_-_Light_Color']}/>
-        <instances.BodyGlassLightColor1 color={props.nodes['Glass_-_Light_Color']}/>
-        <instances.BodyGlassLightColor2 color={props.nodes['Glass_-_Light_Color']}/>
-        <instances.BodyGlassLightColor3 color={props.nodes['Glass_-_Light_Color']}/>
-        <instances.BodyGlassLightColor4 color={props.nodes['Glass_-_Light_Color']}/>
+        <instances.Body color={props.nodes.Body1__0} />
+        <instances.BodyPolyurethane color={props.nodes.Polyurethane} />
+        <instances.BodyDMahoganyGlossy
+          color={props.nodes["3D_Mahogany_-_Glossy"]}
+        />
+        <instances.BodyMirror color={props.nodes.Mirror} />
+        <instances.BodyGlassMediumColor
+          color={props.nodes["Glass_-_Medium_Color"]}
+        />
+        <instances.BodyDMahoganyGlossy1
+          color={props.nodes["3D_Mahogany_-_Glossy"]}
+        />
+        <instances.Body1 color={props.nodes.Body1__0} />
+        <instances.BodyPolyurethane1 color={props.nodes.Polyurethane} />
+        <instances.Body2 color={props.nodes.Body1__0} />
+        <instances.BodyPolyurethane2 color={props.nodes.Polyurethane} />
+        <instances.Body3 color={props.nodes.Body1__0} />
+        <instances.BodyPolyurethane3 color={props.nodes.Polyurethane} />
+        <instances.Body4 color={props.nodes.Body1__0} />
+        <instances.BodyPolyurethane4 color={props.nodes.Polyurethane} />
+        <instances.BodyOpaque color={props.nodes.Opaque152170175} />
+        <instances.BodyOpaque1 color={props.nodes.Opaque152170175} />
+        <instances.BodyOpaque2 color={props.nodes.Opaque152170175} />
+        <instances.BodyOpaque3 color={props.nodes.Opaque152170175} />
+        <instances.BodyOpaque4 color={props.nodes.Opaque152170175} />
+        <instances.BodyGlassLightColor
+          color={props.nodes["Glass_-_Light_Color"]}
+        />
+        <instances.BodyGlassLightColor1
+          color={props.nodes["Glass_-_Light_Color"]}
+        />
+        <instances.BodyGlassLightColor2
+          color={props.nodes["Glass_-_Light_Color"]}
+        />
+        <instances.BodyGlassLightColor3
+          color={props.nodes["Glass_-_Light_Color"]}
+        />
+        <instances.BodyGlassLightColor4
+          color={props.nodes["Glass_-_Light_Color"]}
+        />
       </group>
       {active && (
         <ObjectTransformControls

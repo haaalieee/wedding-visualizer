@@ -11,7 +11,7 @@ import {
 } from "@chakra-ui/react";
 import React from "react";
 
-export default function InputEditor({ inputLabel, value }) {
+export function InputEditor({ inputLabel, value }) {
   return (
     <GridItem w="100%">
       <HStack>
