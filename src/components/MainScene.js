@@ -8,7 +8,7 @@ import { Chandelier, ChandelierInstances } from "../models/Chandelier";
 import { DiningSet, DiningSetInstances } from "../models/DiningSet";
 import { FairyLights, FairyLightsInstances } from "../models/FairyLights";
 import { TableFlowers, TableFlowersInstances } from "../models/TableFlowers";
-import { sceneState } from "../store/sceneData";
+import { sceneStateStore } from "../store/sceneData";
 import { useSceneObjects } from "../store/useSceneObjects";
 import CameraController from "./CameraController";
 
@@ -49,13 +49,19 @@ const SceneFairyLightsObjectList = () => {
 };
 
 const SceneDiningSetObjectList = () => {
-  const snap = useSnapshot(sceneState);
+  const snap = useSnapshot(sceneStateStore);
 
   return Array.from(snap.sceneObjects.values())
     .filter(({ type }) => type === "dining_set")
-    .map(({ id }) => (
+    .map(({ id, scene, nodes }) => (
       <Suspense key={id} fallback={<Loader />}>
-        <DiningSet objectId={id} />
+        <DiningSet
+          objectId={id}
+          position={[scene.position.x, scene.position.y, scene.position.x]}
+          rotation={[scene.rotation.x, scene.rotation.y, scene.rotation.x]}
+          scale={[scene.scale.x, scene.scale.y, scene.scale.x]}
+          nodes={nodes}
+        />
       </Suspense>
     ));
 };
@@ -101,15 +107,15 @@ const SceneChandelierObjectList = () => {
 export default function MainScene() {
   // const sceneObjects = useSceneObjects((state) => state.sceneObjects);
 
-  // const snap = useSnapshot(sceneState);
+  // const snap = useSnapshot(sceneStateStore);
   const [loadedObjects, setLoadedObjects] = useState(false);
 
   subscribe(
-    sceneState.sceneObjects,
+    sceneStateStore.sceneObjects,
     () => {
       setLoadedObjects(true);
     },
-    sceneState.sceneObjects
+    sceneStateStore.sceneObjects
   );
 
   const [{ envHeight, envRadius, envScale }] = useControls(

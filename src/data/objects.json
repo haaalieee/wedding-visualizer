@@ -1,18 +1,42 @@
 [
-    {
-        "name": "Dining Set",
-        "type": "dining_set"
+  {
+    "name": "Dining Set",
+    "type": "dining_set",
+    "position": {
+        "x": 0,
+        "y": 0,
+        "z": 0
     },
-    {
-        "name": "Fairy Lights",
-        "type": "fairy_lights"
+    "rotation": {
+        "x": 0,
+        "y": 0,
+        "z": 0
     },
-    {
-        "name": "Table Flowers",
-        "type": "table_flowers"
+    "scale": {
+        "x": 4,
+        "y": 4,
+        "z": 4
     },
-    {
-        "name": "Chandelier",
-        "type": "chandelier"
+    "nodes": {
+      "Body1__0": "#ffffff",
+      "Polyurethane": "#ffffff",
+      "3D_Mahogany_-_Glossy": "#ffffff",
+      "Mirror": "#ffffff",
+      "Glass_-_Medium_Color": "#ffffff",
+      "Opaque152170175": "#ffffff",
+      "Glass_-_Light_Color": "#ffffff"
     }
+  },
+  {
+    "name": "Fairy Lights",
+    "type": "fairy_lights"
+  },
+  {
+    "name": "Flowers",
+    "type": "table_flowers"
+  },
+  {
+    "name": "Chandelier",
+    "type": "chandelier"
+  }
 ]

@@ -2,8 +2,9 @@
 import { TransformControls } from "@react-three/drei";
 import React from "react";
 import { useKey } from "react-use";
+import { sceneStateStore } from "../store/sceneData";
 
-export default function ObjectTransformControls({ object }) {
+export default function ObjectTransformControls({ id, object }) {
   const [transformMode, setTransformMode] = React.useState("translate");
 
   const translateMode = () => {
@@ -22,6 +23,8 @@ export default function ObjectTransformControls({ object }) {
   useKey("w", translateMode);
   useKey("r", rotateMode);
   useKey("s", scaleMode);
+
+  const currentObject = sceneStateStore.sceneObjects.get(id);
 
   // const { setTransformUpdate } = useTransformStore();
 
@@ -44,6 +47,19 @@ export default function ObjectTransformControls({ object }) {
       object={object}
       mode={transformMode}
       onObjectChange={() => {
+        if (currentObject) {
+          currentObject.scene.position.x = object.position.x;
+          currentObject.scene.position.y = object.position.y;
+          currentObject.scene.position.z = object.position.z;
+
+          currentObject.scene.scale.x = object.scale.x;
+          currentObject.scene.scale.y = object.scale.y;
+          currentObject.scene.scale.z = object.scale.z;
+
+          currentObject.scene.rotation.x = object.rotation.x;
+          currentObject.scene.rotation.y = object.rotation.y;
+          currentObject.scene.rotation.z = object.rotation.z;
+        }
         // setObjectTransformed({...object});
         // if (transformMode === "scale") {
         //   console.log("scaling");
@@ -76,7 +92,6 @@ export default function ObjectTransformControls({ object }) {
         // }
         // setTransformUpdate(true);
       }}
-      onPointerMissed={() => console.log("missing")}
     />
   );
 }

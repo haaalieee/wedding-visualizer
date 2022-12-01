@@ -1,8 +1,7 @@
 import { Container, Heading, Wrap, WrapItem } from "@chakra-ui/react";
-import uniqueId from "lodash.uniqueid";
 import React from "react";
 import objectData from "../data/objects.json";
-import { sceneState } from "../store/sceneData";
+import { sceneStateStore, sceneActions } from "../store/sceneData";
 import ItemCard from "./builder/ItemCard";
 
 export default function SideDrawer() {
@@ -27,15 +26,8 @@ export default function SideDrawer() {
                 //   return;
                 // }
                 // addSceneObject(object);
-                const id = uniqueId();
-                
-                sceneState.sceneObjects.set(id, {
-                  id: id,
-                  name: object.name,
-                  type: object.type,
-                });
-
-                console.log(sceneState);
+                sceneActions.addObject(object);
+                console.log(sceneStateStore);
               }}
             />
           </WrapItem>

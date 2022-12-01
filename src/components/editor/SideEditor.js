@@ -1,101 +1,134 @@
 /* eslint-disable react/prop-types */
 import { Container, Grid, Text } from "@chakra-ui/react";
-import React, { useEffect } from "react";
-import { RgbaColorPicker } from "react-colorful";
-import {
-  useSceneObjects,
-  useTransformStore
-} from "../../store/useSceneObjects";
+import React from "react";
+import { HexColorPicker } from "react-colorful";
+import { useSnapshot } from "valtio";
+import { sceneStateStore } from "../../store/sceneData";
 import InputCategoryLabel from "./InputCategoryLabel";
 import InputEditor from "./InputEditor";
 
-export default function SideEditor(props) {
-  const { object } = props;
-  const {
-    getActiveObject,
-    updateActiveChildColor,
-  } = useSceneObjects();
-  const { transformUpdate } = useTransformStore();
+export default function SideEditor() {
+  // const [localPosition, setLocalPosition] = useState({ x: 0, y: 0, z: 0 });
 
-  useEffect(() => {
-    console.log("side editor", object);
-  }, [object]);
-
-  // const [objectPosProps, setObjectPosProps] = useState([0, 0, 0]);
-  // const [objectRotateProps, setObjectRotateProps] = useState([0, 0, 0]);
-  // const [objectScaleProps, setObjectScaleProps] = useState([0, 0, 0]);
-
-  const [color, setColor] = React.useState({ r: 0, g: 0, b: 0, a: 1 });
+  // subscribe(
+  //   transformStore.transformUpdate,
+  //   () => {
+  //     sceneActions.getActiveObject();
+  //   },
+  //   transformStore.transformUpdate
+  // );
 
   // useEffect(() => {
   //   if (transformUpdate) {
-  //     // console.log(getActiveObject().scene.children.find((obj) => obj.uuid === "f45a6d6f-0729-43ca-a6e7-89366e5668cb"));
-  //     setObjectPosProps([
-  //       getActiveObject().scene.position.x,
-  //       getActiveObject().scene.position.y,
-  //       getActiveObject().scene.position.z,
-  //     ]);
-
-  //     setObjectRotateProps([
-  //       getActiveObject().scene.rotation.x,
-  //       getActiveObject().scene.rotation.y,
-  //       getActiveObject().scene.rotation.z,
-  //     ]);
-
-  //     setObjectScaleProps([
-  //       getActiveObject().scene.scale.x,
-  //       getActiveObject().scene.scale.y,
-  //       getActiveObject().scene.scale.z,
-  //     ]);
-
-  //     setColor({
-  //       r: getActiveChildObject().instance.current.material.color.r * 255,
-  //       g: getActiveChildObject().instance.current.material.color.g * 255,
-  //       b: getActiveChildObject().instance.current.material.color.b * 255,
-  //     });
-  //   } else {
-  //     setObjectPosProps([0, 0, 0]);
-  //     setObjectRotateProps([0, 0, 0]);
-  //     setObjectScaleProps([0, 0, 0]);
-  //     setColor({ r: 0, g: 0, b: 0 });
+  //     console.log("i'm transforming");
+  //     sceneActions.getActiveObject();
   //   }
   // }, [transformUpdate]);
+  const snap = useSnapshot(sceneStateStore);
+  const activeId = snap.current.id;
+  const activeMaterial = snap.current.material;
 
-  useEffect(() => {
-    if (color && transformUpdate) {
-      updateActiveChildColor(getActiveObject().id, color);
-    }
-  }, [color]);
+  const activeObject = Array.from(snap.sceneObjects.values()).find(
+    (obj) => obj.id === activeId
+  );
+
+  const currentObject = sceneStateStore.sceneObjects.get(activeId);
 
   return (
-    <Container p="4">
+    <Container
+      p="4"
+      style={{
+        position: "absolute",
+        top: 0,
+        width: "230px",
+        right: 0,
+        height: "100%",
+        backgroundColor: "white",
+      }}
+    >
       <Text fontSize="sm" mb="2">
         Transformation
       </Text>
       <Grid templateColumns={"1fr 1fr 1fr"} gap={2} alignItems="center" mb="8">
         <InputCategoryLabel catergoryLabel="Position" />
-        <InputEditor inputLabel="x" value={props.object.position.x} />
-        <InputEditor inputLabel="y" value={props.object.position.y} />
-        <InputEditor inputLabel="z" value={props.object.position.z} />
+        <InputEditor inputLabel="x" value={activeObject.scene.position.x} />
+        <InputEditor inputLabel="y" value={activeObject.scene.position.y} />
+        <InputEditor inputLabel="z" value={activeObject.scene.position.z} />
         <InputCategoryLabel catergoryLabel="Rotation" />
-        <InputEditor inputLabel="x" value={props.object.rotation.x} />
-        <InputEditor inputLabel="y" value={props.object.rotation.y} />
-        <InputEditor inputLabel="z" value={props.object.rotation.z} />
+        <InputEditor inputLabel="x" value={activeObject.scene.rotation.x} />
+        <InputEditor inputLabel="y" value={activeObject.scene.rotation.y} />
+        <InputEditor inputLabel="z" value={activeObject.scene.rotation.z} />
         <InputCategoryLabel catergoryLabel="Scale" />
-        <InputEditor inputLabel="x" value={props.object.scale.x} />
-        <InputEditor inputLabel="y" value={props.object.scale.y} />
-        <InputEditor inputLabel="z" value={props.object.scale.z} />
+        <InputEditor inputLabel="x" value={activeObject.scene.scale.x} />
+        <InputEditor inputLabel="y" value={activeObject.scene.scale.y} />
+        <InputEditor inputLabel="z" value={activeObject.scene.scale.z} />
       </Grid>
-      <Text fontSize="sm" mb="4">
-        Material
-      </Text>
-      <Grid templateColumns={"1fr 1fr 1fr"} gap={2} alignItems="center" mb="8">
-        <InputCategoryLabel catergoryLabel="Color" />
-        <InputEditor inputLabel="r" value={color.r} />
-        <InputEditor inputLabel="g" value={color.g} />
-        <InputEditor inputLabel="b" value={color.b} />
-      </Grid>
-      <RgbaColorPicker color={color} onChange={setColor} />
+      {activeMaterial && (
+        <>
+          <Text fontSize="sm" mb="4">
+            Material
+          </Text>
+          <Grid
+            templateColumns={"1fr 1fr 1fr"}
+            gap={2}
+            alignItems="center"
+            mb="8"
+          >
+            <InputCategoryLabel catergoryLabel="Color" />
+            <InputEditor inputLabel="r" value={"0"} />
+            <InputEditor inputLabel="g" value={"0"} />
+            <InputEditor inputLabel="b" value={"0"} />
+          </Grid>
+
+          <HexColorPicker
+            color={activeObject.nodes[activeMaterial]}
+            onChange={(color) => (currentObject.nodes[activeMaterial] = color)}
+          />
+        </>
+      )}
     </Container>
   );
+  // return Array.from(snap.sceneObjects.values())
+  //   .find((obj) => obj.id === activeId)
+  //   .map(({ id, scene }) => {
+  //     <Container p="4" key={id}>
+  //       <Text fontSize="sm" mb="2">
+  //         Transformation
+  //       </Text>
+  //       <Grid
+  //         templateColumns={"1fr 1fr 1fr"}
+  //         gap={2}
+  //         alignItems="center"
+  //         mb="8"
+  //       >
+  //         <InputCategoryLabel catergoryLabel="Position" />
+  //         <InputEditor inputLabel="x" value={scene.position.x} />
+  //         <InputEditor inputLabel="y" value={scene.position.y} />
+  //         <InputEditor inputLabel="z" value={scene.position.z} />
+  //         <InputCategoryLabel catergoryLabel="Rotation" />
+  //         <InputEditor inputLabel="x" value={scene.rotation.x} />
+  //         <InputEditor inputLabel="y" value={scene.rotation.y} />
+  //         <InputEditor inputLabel="z" value={scene.rotation.z} />
+  //         <InputCategoryLabel catergoryLabel="Scale" />
+  //         <InputEditor inputLabel="x" value={scene.scale.x} />
+  //         <InputEditor inputLabel="y" value={scene.scale.y} />
+  //         <InputEditor inputLabel="z" value={scene.scale.z} />
+  //       </Grid>
+  //       <Text fontSize="sm" mb="4">
+  //         Material
+  //       </Text>
+  //       <Grid
+  //         templateColumns={"1fr 1fr 1fr"}
+  //         gap={2}
+  //         alignItems="center"
+  //         mb="8"
+  //       >
+  //         <InputCategoryLabel catergoryLabel="Color" />
+  //         <InputEditor inputLabel="r" value={color.r} />
+  //         <InputEditor inputLabel="g" value={color.g} />
+  //         <InputEditor inputLabel="b" value={color.b} />
+  //       </Grid>
+  //       <RgbaColorPicker color={color} onChange={setColor} />
+  //     </Container>;
+  //   });
 }
