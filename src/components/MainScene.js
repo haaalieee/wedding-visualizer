@@ -1,7 +1,7 @@
 /* eslint-disable react/no-unknown-property */
-import { Environment, Loader, OrbitControls } from "@react-three/drei";
+import { Loader, OrbitControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
-import { useControls } from "leva";
+// import { useControls } from "leva";
 import React, { Suspense, useState } from "react";
 import { subscribe, useSnapshot } from "valtio";
 import { Chandelier, ChandelierInstances } from "../models/Chandelier";
@@ -118,29 +118,29 @@ export default function MainScene() {
     sceneStateStore.sceneObjects
   );
 
-  const [{ envHeight, envRadius, envScale }] = useControls(
-    "Env Map Settings",
-    () => ({
-      envHeight: {
-        value: 29,
-        min: 0,
-        max: 1000,
-        step: 1,
-      },
-      envRadius: {
-        value: 214,
-        min: 0,
-        max: 1000,
-        step: 1,
-      },
-      envScale: {
-        value: 50,
-        min: 0,
-        max: 1000,
-        step: 1,
-      },
-    })
-  );
+  // const [{ envHeight, envRadius, envScale }] = useControls(
+  //   "Env Map Settings",
+  //   () => ({
+  //     envHeight: {
+  //       value: 29,
+  //       min: 0,
+  //       max: 1000,
+  //       step: 1,
+  //     },
+  //     envRadius: {
+  //       value: 214,
+  //       min: 0,
+  //       max: 1000,
+  //       step: 1,
+  //     },
+  //     envScale: {
+  //       value: 50,
+  //       min: 0,
+  //       max: 1000,
+  //       step: 1,
+  //     },
+  //   })
+  // );
 
   return (
     <>
@@ -183,11 +183,12 @@ export default function MainScene() {
         )}
         {/* <ContactShadows scale={20} blur={10} far={20} /> */}
         <OrbitControls makeDefault />
-        <Environment
+        {/* <Environment
           files="/dancing_hall_1k.hdr"
           ground={{ height: envHeight, radius: envRadius, scale: envScale }}
-        />
+        /> */}
         <CameraController />
+        <gridHelper args={[150, 50, "blue", "hotpink"]} />
       </Canvas>
     </>
   );
