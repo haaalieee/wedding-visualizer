@@ -1,20 +1,28 @@
 /* eslint-disable react/no-unknown-property */
-import { Loader, OrbitControls } from "@react-three/drei";
+import { OrbitControls, Stats } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 // import { useControls } from "leva";
 import React, { Suspense, useEffect, useRef, useState } from "react";
-import { subscribe } from "valtio";
+import { subscribe, useSnapshot } from "valtio";
 import {
+  ChairsInstances,
   ChandelierInstances,
   DiningSetInstances,
-  FairyLightsInstances, TableFlowersInstances
+  FairyLightsInstances,
+  TableFlowersInstances
 } from "../models";
-import { sceneStateStore } from "../store/sceneData";
+import { cameraOrbitStateStore, sceneStateStore } from "../store/sceneData";
 import CameraController from "./CameraController";
+import Floor from "./Floor";
+import Loader from "./Loader";
 import {
-  SceneChandelierObjectList, SceneDiningSetObjectList, SceneFairyLightsObjectList,
+  SceneChairsObjectList,
+  SceneChandelierObjectList,
+  SceneDiningSetObjectList,
+  SceneFairyLightsObjectList,
   SceneTableFlowersObjectList
 } from "./sceneList";
+import SceneRoomList from "./sceneList/SceneRoomList";
 
 export default function MainScene() {
   const [loadedObjects, setLoadedObjects] = useState(false);
@@ -53,11 +61,12 @@ export default function MainScene() {
 
   const gridRef = useRef();
 
-  useEffect(()=>{
-    if(gridRef.current) {
-      console.log(gridRef.current)
-    }
-  },[gridRef.current])
+  useEffect(() => {
+    console.log(gridRef);
+  }, [gridRef]);
+
+  /** Get orbit camera props from store */
+  const cameraState = useSnapshot(cameraOrbitStateStore);
 
   return (
     <>
@@ -72,8 +81,7 @@ export default function MainScene() {
       >
         {/* <color args={["#e3f4ff"]} attach="background" /> */}
         <spotLight angle={1} position={[-80, 200, -100]} intensity={1} />
-        <hemisphereLight color="white" groundColor="blue" intensity={0.75} />
-        <spotLight position={[50, 50, 10]} angle={0.15} penumbra={1} />
+        <ambientLight intensity={0.5} />
         {loadedObjects && (
           <>
             <Suspense fallback={<Loader />}>
@@ -96,16 +104,24 @@ export default function MainScene() {
                 <SceneChandelierObjectList />
               </ChandelierInstances>
             </Suspense>
+            <Suspense fallback={<Loader />}>
+              <ChairsInstances>
+                <SceneChairsObjectList />
+              </ChairsInstances>
+            </Suspense>
           </>
         )}
+        <Floor />
         {/* <ContactShadows scale={20} blur={10} far={20} /> */}
-        <OrbitControls makeDefault />
+        <SceneRoomList />
         {/* <Environment
           files="/dancing_hall_1k.hdr"
           ground={{ height: envHeight, radius: envRadius, scale: envScale }}
         /> */}
+        <OrbitControls makeDefault enabled={cameraState.orbitCameraEnabled} />
         <CameraController />
-        <gridHelper args={[150, 50, "blue", "hotpink"]} ref={gridRef} />
+        <gridHelper args={[250, 50, "blue", "hotpink"]} ref={gridRef} />
+        <Stats className="stats" />
       </Canvas>
     </>
   );

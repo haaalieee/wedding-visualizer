@@ -3,7 +3,7 @@ import { Box, Image, Text } from "@chakra-ui/react";
 import React from "react";
 import ImagePlaceholder from "../../assets/placeholder/img-placeholder.png";
 
-export default function ItemCard({ text, onClick }) {
+export function ItemCard({ text, onClick }) {
   return (
     <Box
       cursor="pointer"

@@ -76,4 +76,4 @@ export function Table(props) {
   );
 }
 
-useGLTF.preload("/table-transformed.glb");
+// useGLTF.preload("/table-transformed.glb");

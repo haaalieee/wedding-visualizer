@@ -160,4 +160,4 @@ export function FlowerVase(props) {
   );
 }
 
-useGLTF.preload("/flower_vase-transformed.glb");
+// useGLTF.preload("/flower_vase-transformed.glb");

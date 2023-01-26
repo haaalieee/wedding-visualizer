@@ -67,4 +67,4 @@ export function ModernChair(props) {
   );
 }
 
-useGLTF.preload("/modern_chair-transformed.glb");
+// useGLTF.preload("/modern_chair-transformed.glb");

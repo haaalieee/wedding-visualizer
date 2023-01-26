@@ -9,11 +9,14 @@ export function SceneTableFlowersObjectList() {
 
   return Array.from(snap.sceneObjects.values())
     .filter(({ type }) => type === "table_flowers")
-    .map(({ id, nodes }) => (
+    .map(({ id, nodes, scene }) => (
       <Suspense key={id} fallback={<Loader />}>
         <TableFlowers
           objectId={id}
           nodes={nodes}
+          position={scene.position}
+          rotation={scene.rotation}
+          scale={scene.scale}
         />
       </Suspense>
     ));

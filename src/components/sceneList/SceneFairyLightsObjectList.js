@@ -9,9 +9,11 @@ export function SceneFairyLightsObjectList() {
 
   return Array.from(snap.sceneObjects.values())
     .filter(({ type }) => type === "fairy_lights")
-    .map(({ id, nodes }) => (
+    .map(({ id, nodes, scene }) => (
       <Suspense key={id} fallback={<Loader />}>
-        <FairyLights objectId={id} nodes={nodes} />
+        <FairyLights objectId={id} nodes={nodes}  position={scene.position}
+          rotation={scene.rotation}
+          scale={scene.scale}/>
       </Suspense>
     ));
 }

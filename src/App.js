@@ -1,25 +1,36 @@
-import { Grid, GridItem } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 import React from "react";
 import { useSnapshot } from "valtio";
+import { RoomOptions } from "./components/builder";
 import { SideEditor } from "./components/editor";
 import MainScene from "./components/MainScene";
 import SideDrawer from "./components/SideDrawer";
-import { sceneStateStore } from "./store/sceneData";
+import { roomStateStore, sceneStateStore } from "./store/sceneData";
 
 export default function App() {
-  const snap = useSnapshot(sceneStateStore);
+  const sceneSnap = useSnapshot(sceneStateStore);
+  const roomSnap = useSnapshot(roomStateStore);
 
   return (
-    <>
-      <Grid templateColumns="300px 1fr" height="100vh">
+    <Box height="100vh" >
+      {/* <Grid templateColumns="300px 1fr" height="100vh">
         <GridItem>
           <SideDrawer />
         </GridItem>
         <GridItem>
           <MainScene />
         </GridItem>
-      </Grid>
-      {snap.current.id && <SideEditor />}
-    </>
+      </Grid> */}
+      {roomSnap.currentRoom && <SideDrawer />}
+      <MainScene />
+      {sceneSnap.current.id && <SideEditor />}
+      {!roomSnap.currentRoom && (
+        <RoomOptions
+          className="room-centered"
+          textAlign="center"
+          textSize="md"
+        />
+      )}
+    </Box>
   );
 }

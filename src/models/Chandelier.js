@@ -10,8 +10,14 @@ title: Lustre Luxe
 */
 
 import { Merged, useGLTF } from "@react-three/drei";
-import React, { createContext, useContext, useMemo, useRef } from "react";
-import { useToggle } from "react-use";
+import { useFrame } from "@react-three/fiber";
+import React, {
+  createContext,
+  useContext,
+  useMemo,
+  useRef,
+  useState
+} from "react";
 import ObjectTransformControls from "../components/ObjectTransformControls";
 import { sceneActions, sceneStateStore } from "../store/sceneData";
 
@@ -116,36 +122,55 @@ export function ChandelierInstances({ children, ...props }) {
 export function Chandelier(props) {
   const instances = useContext(context);
 
-  const [active, toggleActive] = useToggle(false);
+  // const [active, toggleActive] = useToggle(false);
+
+  const [transformController, setTransformController] = useState(false);
 
   const objectRef = useRef();
+
+  const [colliderColor, setColliderColor] = useState(false);
+
+  useFrame(() => {
+    if (objectRef.current) {
+      if (objectRef.current.position.y < 0) {
+        setColliderColor(true);
+      } else {
+        setColliderColor(false);
+      }
+    }
+  });
+
 
   return (
     <>
       <group
-          {...props}
+        {...props}
         dispose={null}
-        onClick={(e) => {
+        onClick={() => {
+          setTransformController(true);
+        }}
+        onPointerMissed={() => {
+          // e.type === "click" && toggleActive(false);
+          sceneActions.removeActiveObject();
+          console.log(sceneStateStore);
+
+          setTransformController(false);
+        }}
+        onDoubleClick={(e) => {
           e.stopPropagation();
-          // setActiveObject(props.objectId);
-          // setActiveChildObject(props.objectId, e.object.uuid);
-          // setTransformUpdate(true);
+
           sceneActions.setActiveObject(props.objectId);
+          // console.log(e.object.instance.current.material.name)
           sceneActions.setActiveMaterial(
             e.object.instance.current.material.name
           );
-          toggleActive(true);
+
+          setTransformController(false);
+          // toggleActive(true);
         }}
-        onPointerMissed={(e) => {
-          e.type === "click" && toggleActive(false);
-          sceneActions.removeActiveObject();
-          console.log(sceneStateStore);
-          // rmActiveObject(props.objectId);
-          // setTransformUpdate(false);
-        }}
-        position={[0,0,0]}
-        rotation={[0,0,0]}
-        scale={[1,1,1]}
+        position={[props.position.x, props.position.y, props.position.z]}
+        rotation={[props.rotation.x, props.rotation.y, props.rotation.z]}
+        scale={[props.scale.x, props.scale.y, props.scale.z]}
         ref={objectRef}
       >
         <group rotation={[-Math.PI / 2, 0, 0]}>
@@ -155,20 +180,28 @@ export function Chandelier(props) {
               rotation={[-Math.PI / 2, 0, 0]}
             >
               <group position={[0.01, 0.01, 1.9]} scale={[0.27, 0.27, 2.21]}>
-                <instances.CircleMaterial color={props.nodes[0]}/>
+                <instances.CircleMaterial
+                  color={ colliderColor ? "red" : colliderColor ? "red" : props.nodes[0]}
+                />
               </group>
               <group position={[0.01, 0, 2.62]} scale={0.24}>
-                <instances.ConeMaterial color={props.nodes[0]}/>
+                <instances.ConeMaterial
+                  color={ colliderColor ? "red" : colliderColor ? "red" : props.nodes[0]}
+                />
               </group>
               <group position={[0.01, 0.01, -0.78]} scale={[1, 1, 1.88]}>
-                <instances.ObjectMaterial color={props.nodes[0]}/>
+                <instances.ObjectMaterial
+                  color={ colliderColor ? "red" : colliderColor ? "red" : props.nodes[0]}
+                />
               </group>
               <group
                 position={[0.01, 0.01, -2.22]}
                 rotation={[-Math.PI / 2, -1.4, 0]}
               >
                 <group position={[-1.54, -1.29, 0]}>
-                  <instances.GeoSphereMaterial color={props.nodes[0]}/>
+                  <instances.GeoSphereMaterial
+                    color={ colliderColor ? "red" : colliderColor ? "red" : props.nodes[0]}
+                  />
                 </group>
               </group>
               <group
@@ -181,7 +214,9 @@ export function Chandelier(props) {
                   rotation={[-2.44, Math.PI / 2, 0]}
                   scale={0.05}
                 >
-                  <instances.GeoSphereMaterial1 color={props.nodes[0]} />
+                  <instances.GeoSphereMaterial1
+                    color={ colliderColor ? "red" : colliderColor ? "red" : props.nodes[0]}
+                  />
                 </group>
               </group>
               <group
@@ -194,7 +229,9 @@ export function Chandelier(props) {
                   rotation={[-2.27, Math.PI / 2, 0]}
                   scale={0.05}
                 >
-                  <instances.GeoSphereMaterial2 color={props.nodes[0]} />
+                  <instances.GeoSphereMaterial2
+                    color={ colliderColor ? "red" : colliderColor ? "red" : props.nodes[0]}
+                  />
                 </group>
               </group>
               <group
@@ -207,7 +244,9 @@ export function Chandelier(props) {
                   rotation={[-2.09, Math.PI / 2, 0]}
                   scale={0.05}
                 >
-                  <instances.GeoSphereMaterial3 color={props.nodes[0]} />
+                  <instances.GeoSphereMaterial3
+                    color={ colliderColor ? "red" : colliderColor ? "red" : props.nodes[0]}
+                  />
                 </group>
               </group>
               <group
@@ -220,7 +259,9 @@ export function Chandelier(props) {
                   rotation={[-2.62, Math.PI / 2, 0]}
                   scale={0.05}
                 >
-                  <instances.GeoSphereMaterial4 color={props.nodes[0]} />
+                  <instances.GeoSphereMaterial4
+                    color={ colliderColor ? "red" : colliderColor ? "red" : props.nodes[0]}
+                  />
                 </group>
               </group>
               <group
@@ -228,7 +269,9 @@ export function Chandelier(props) {
                 rotation={[Math.PI / 2, -0.96, -Math.PI / 2]}
               >
                 <group position={[0.93, 0.04, 0.24]}>
-                  <instances.Line color={props.nodes[0]} />
+                  <instances.Line
+                    color={ colliderColor ? "red" : colliderColor ? "red" : props.nodes[0]}
+                  />
                 </group>
               </group>
               <group
@@ -236,216 +279,350 @@ export function Chandelier(props) {
                 rotation={[Math.PI / 2, -0.96, -Math.PI / 2]}
               >
                 <group position={[0.93, 0.04, 0.24]}>
-                  <instances.LineMaterial color={props.nodes[0]}/>
+                  <instances.LineMaterial
+                    color={ colliderColor ? "red" : colliderColor ? "red" : props.nodes[0]}
+                  />
                 </group>
               </group>
               <group position={[0.01, -0.44, -2.2]} scale={0.07}>
-                <instances.GeoSphereMaterial5 color={props.nodes[0]} />
+                <instances.GeoSphereMaterial5
+                  color={ colliderColor ? "red" : colliderColor ? "red" : props.nodes[0]}
+                />
               </group>
               <group position={[0.54, -1.44, -0.92]} scale={0.07}>
-                <instances.GeoSphereMaterial6 color={props.nodes[0]} />
+                <instances.GeoSphereMaterial6
+                  color={ colliderColor ? "red" : colliderColor ? "red" : props.nodes[0]}
+                />
               </group>
               <group position={[0.78, -1.33, -0.92]} scale={0.07}>
-                <instances.GeoSphereMaterial7 color={props.nodes[0]} />
+                <instances.GeoSphereMaterial7
+                  color={ colliderColor ? "red" : colliderColor ? "red" : props.nodes[0]}
+                />
               </group>
               <group position={[1.19, -0.99, -0.93]} scale={0.07}>
-                <instances.GeoSphereMaterial8 color={props.nodes[0]} />
+                <instances.GeoSphereMaterial8
+                  color={ colliderColor ? "red" : colliderColor ? "red" : props.nodes[0]}
+                />
               </group>
               <group position={[1.34, -0.76, -0.92]} scale={0.07}>
-                <instances.GeoSphereMaterial9 color={props.nodes[0]} />
+                <instances.GeoSphereMaterial9
+                  color={ colliderColor ? "red" : colliderColor ? "red" : props.nodes[0]}
+                />
               </group>
               <group position={[1.53, -0.26, -0.92]} scale={0.07}>
-                <instances.GeoSphereMaterial10 color={props.nodes[0]} />
+                <instances.GeoSphereMaterial10
+                  color={ colliderColor ? "red" : colliderColor ? "red" : props.nodes[0]}
+                />
               </group>
               <group position={[1.46, 0.54, -0.92]} scale={0.07}>
-                <instances.GeoSphereMaterial11 color={props.nodes[0]} />
+                <instances.GeoSphereMaterial11
+                  color={ colliderColor ? "red" : colliderColor ? "red" : props.nodes[0]}
+                />
               </group>
               <group position={[1.19, 1, -0.93]} scale={0.07}>
                 <instances.GeoSphereMaterial12 />
               </group>
               <group position={[0.78, 1.34, -0.92]} scale={0.07}>
-                <instances.GeoSphereMaterial13 color={props.nodes[0]} />
+                <instances.GeoSphereMaterial13
+                  color={ colliderColor ? "red" : colliderColor ? "red" : props.nodes[0]}
+                />
               </group>
               <group position={[0.54, 1.46, -0.92]} scale={0.07}>
-                <instances.GeoSphereMaterial14 color={props.nodes[0]} />
+                <instances.GeoSphereMaterial14
+                  color={ colliderColor ? "red" : colliderColor ? "red" : props.nodes[0]}
+                />
               </group>
               <group position={[0.01, 1.55, -0.92]} scale={0.07}>
-                <instances.GeoSphereMaterial15 color={props.nodes[0]} />
+                <instances.GeoSphereMaterial15
+                  color={ colliderColor ? "red" : colliderColor ? "red" : props.nodes[0]}
+                />
               </group>
               <group position={[-0.52, 1.46, -0.92]} scale={0.07}>
-                <instances.GeoSphereMaterial16 color={props.nodes[0]} />
+                <instances.GeoSphereMaterial16
+                  color={ colliderColor ? "red" : colliderColor ? "red" : props.nodes[0]}
+                />
               </group>
               <group position={[-0.98, 1.19, -0.92]} scale={0.07}>
-                <instances.GeoSphereMaterial17 color={props.nodes[0]} />
+                <instances.GeoSphereMaterial17
+                  color={ colliderColor ? "red" : colliderColor ? "red" : props.nodes[0]}
+                />
               </group>
               <group position={[-1.33, 0.78, -0.92]} scale={0.07}>
-                <instances.GeoSphereMaterial18 color={props.nodes[0]} />
+                <instances.GeoSphereMaterial18
+                  color={ colliderColor ? "red" : colliderColor ? "red" : props.nodes[0]}
+                />
               </group>
               <group position={[-1.51, 0.28, -0.92]} scale={0.07}>
-                <instances.GeoSphereMaterial19 color={props.nodes[0]} />
+                <instances.GeoSphereMaterial19
+                  color={ colliderColor ? "red" : colliderColor ? "red" : props.nodes[0]}
+                />
               </group>
               <group position={[-1.51, -0.26, -0.92]} scale={0.07}>
-                <instances.GeoSphereMaterial20 color={props.nodes[0]} />
+                <instances.GeoSphereMaterial20
+                  color={ colliderColor ? "red" : colliderColor ? "red" : props.nodes[0]}
+                />
               </group>
               <group position={[-1.44, -0.52, -0.92]} scale={0.07}>
-                <instances.GeoSphereMaterial21 color={props.nodes[0]} />
+                <instances.GeoSphereMaterial21
+                  color={ colliderColor ? "red" : colliderColor ? "red" : props.nodes[0]}
+                />
               </group>
               <group position={[-1.33, -0.76, -0.92]} scale={0.07}>
-                <instances.GeoSphereMaterial22 color={props.nodes[0]} />
+                <instances.GeoSphereMaterial22
+                  color={ colliderColor ? "red" : colliderColor ? "red" : props.nodes[0]}
+                />
               </group>
               <group position={[-1.18, -0.98, -0.92]} scale={0.07}>
-                <instances.GeoSphereMaterial23 color={props.nodes[0]} />
+                <instances.GeoSphereMaterial23
+                  color={ colliderColor ? "red" : colliderColor ? "red" : props.nodes[0]}
+                />
               </group>
               <group position={[-0.98, -1.18, -0.92]} scale={0.07}>
-                <instances.GeoSphereMaterial24 color={props.nodes[0]} />
+                <instances.GeoSphereMaterial24
+                  color={ colliderColor ? "red" : colliderColor ? "red" : props.nodes[0]}
+                />
               </group>
               <group position={[-0.76, -1.33, -0.93]} scale={0.07}>
-                <instances.GeoSphereMaterial25 color={props.nodes[0]} />
+                <instances.GeoSphereMaterial25
+                  color={ colliderColor ? "red" : colliderColor ? "red" : props.nodes[0]}
+                />
               </group>
               <group position={[-0.52, -1.44, -0.92]} scale={0.07}>
-                <instances.GeoSphereMaterial26 color={props.nodes[0]} />
+                <instances.GeoSphereMaterial26
+                  color={ colliderColor ? "red" : colliderColor ? "red" : props.nodes[0]}
+                />
               </group>
               <group position={[0.08, -0.38, -2.21]} scale={0.07}>
-                <instances.GeoSphereMaterial27 color={props.nodes[0]} />
+                <instances.GeoSphereMaterial27
+                  color={ colliderColor ? "red" : colliderColor ? "red" : props.nodes[0]}
+                />
               </group>
               <group position={[0.3, -0.34, -2.2]} scale={0.07}>
-                <instances.GeoSphereMaterial28 color={props.nodes[0]} />
+                <instances.GeoSphereMaterial28
+                  color={ colliderColor ? "red" : colliderColor ? "red" : props.nodes[0]}
+                />
               </group>
               <group position={[0.38, -0.13, -2.21]} scale={0.07}>
-                <instances.GeoSphereMaterial29 color={props.nodes[0]} />
+                <instances.GeoSphereMaterial29
+                  color={ colliderColor ? "red" : colliderColor ? "red" : props.nodes[0]}
+                />
               </group>
               <group position={[0.45, 0.01, -2.2]} scale={0.07}>
-                <instances.GeoSphereMaterial30 color={props.nodes[0]} />
+                <instances.GeoSphereMaterial30
+                  color={ colliderColor ? "red" : colliderColor ? "red" : props.nodes[0]}
+                />
               </group>
               <group position={[0.4, 0.08, -2.21]} scale={0.07}>
-                <instances.GeoSphereMaterial31 color={props.nodes[0]} />
+                <instances.GeoSphereMaterial31
+                  color={ colliderColor ? "red" : colliderColor ? "red" : props.nodes[0]}
+                />
               </group>
               <group position={[0.36, 0.21, -2.21]} scale={0.07}>
-                <instances.GeoSphereMaterial32 color={props.nodes[0]} />
+                <instances.GeoSphereMaterial32
+                  color={ colliderColor ? "red" : colliderColor ? "red" : props.nodes[0]}
+                />
               </group>
               <group position={[0.29, 0.34, -2.21]} scale={0.07}>
-                <instances.GeoSphereMaterial33 color={props.nodes[0]} />
+                <instances.GeoSphereMaterial33
+                  color={ colliderColor ? "red" : colliderColor ? "red" : props.nodes[0]}
+                />
               </group>
               <group position={[0.08, 0.44, -2.21]} scale={0.07}>
-                <instances.GeoSphereMaterial34 color={props.nodes[0]} />
+                <instances.GeoSphereMaterial34
+                  color={ colliderColor ? "red" : colliderColor ? "red" : props.nodes[0]}
+                />
               </group>
               <group position={[-0.06, 0.4, -2.21]} scale={0.07}>
-                <instances.GeoSphereMaterial35 color={props.nodes[0]} />
+                <instances.GeoSphereMaterial35
+                  color={ colliderColor ? "red" : colliderColor ? "red" : props.nodes[0]}
+                />
               </group>
               <group position={[-0.2, 0.37, -2.21]} scale={0.07}>
-                <instances.GeoSphereMaterial36 color={props.nodes[0]} />
+                <instances.GeoSphereMaterial36
+                  color={ colliderColor ? "red" : colliderColor ? "red" : props.nodes[0]}
+                />
               </group>
               <group position={[-0.31, 0.27, -2.21]} scale={0.07}>
-                <instances.GeoSphereMaterial37 color={props.nodes[0]} />
+                <instances.GeoSphereMaterial37
+                  color={ colliderColor ? "red" : colliderColor ? "red" : props.nodes[0]}
+                />
               </group>
               <group position={[-0.39, 0.15, -2.21]} scale={0.07}>
-                <instances.GeoSphereMaterial38 color={props.nodes[0]} />
+                <instances.GeoSphereMaterial38
+                  color={ colliderColor ? "red" : colliderColor ? "red" : props.nodes[0]}
+                />
               </group>
               <group position={[-0.44, 0.01, -2.2]} scale={0.07}>
-                <instances.GeoSphereMaterial39 color={props.nodes[0]} />
+                <instances.GeoSphereMaterial39
+                  color={ colliderColor ? "red" : colliderColor ? "red" : props.nodes[0]}
+                />
               </group>
               <group position={[-1.35, -0.49, -0.75]} scale={0.07}>
-                <instances.GeoSphereMaterial40 color={props.nodes[0]} />
+                <instances.GeoSphereMaterial40
+                  color={ colliderColor ? "red" : colliderColor ? "red" : props.nodes[0]}
+                />
               </group>
               <group position={[1.36, -0.49, -0.75]} scale={0.07}>
-                <instances.GeoSphereMaterial41 color={props.nodes[0]} />
+                <instances.GeoSphereMaterial41
+                  color={ colliderColor ? "red" : colliderColor ? "red" : props.nodes[0]}
+                />
               </group>
               <group position={[1.12, -0.93, -0.76]} scale={0.07}>
-                <instances.GeoSphereMaterial42 color={props.nodes[0]} />
+                <instances.GeoSphereMaterial42
+                  color={ colliderColor ? "red" : colliderColor ? "red" : props.nodes[0]}
+                />
               </group>
               <group position={[0.94, -1.1, -0.75]} scale={0.07}>
-                <instances.GeoSphereMaterial43 color={props.nodes[0]} />
+                <instances.GeoSphereMaterial43
+                  color={ colliderColor ? "red" : colliderColor ? "red" : props.nodes[0]}
+                />
               </group>
               <group position={[0.73, -1.24, -0.75]} scale={0.07}>
-                <instances.GeoSphereMaterial44 color={props.nodes[0]} />
+                <instances.GeoSphereMaterial44
+                  color={ colliderColor ? "red" : colliderColor ? "red" : props.nodes[0]}
+                />
               </group>
               <group position={[0.5, -1.35, -0.75]} scale={0.07}>
-                <instances.GeoSphereMaterial45 color={props.nodes[0]} />
+                <instances.GeoSphereMaterial45
+                  color={ colliderColor ? "red" : colliderColor ? "red" : props.nodes[0]}
+                />
               </group>
               <group position={[0.26, -1.41, -0.75]} scale={0.07}>
-                <instances.GeoSphereMaterial46 color={props.nodes[0]} />
+                <instances.GeoSphereMaterial46
+                  color={ colliderColor ? "red" : colliderColor ? "red" : props.nodes[0]}
+                />
               </group>
               <group position={[0.01, -1.45, -0.76]} scale={0.07}>
-                <instances.GeoSphereMaterial47 color={props.nodes[0]} />
+                <instances.GeoSphereMaterial47
+                  color={ colliderColor ? "red" : colliderColor ? "red" : props.nodes[0]}
+                />
               </group>
               <group position={[-0.24, -1.42, -0.76]} scale={0.07}>
-                <instances.GeoSphereMaterial48 color={props.nodes[0]} />
+                <instances.GeoSphereMaterial48
+                  color={ colliderColor ? "red" : colliderColor ? "red" : props.nodes[0]}
+                />
               </group>
               <group position={[-0.49, -1.36, -0.76]} scale={0.07}>
-                <instances.GeoSphereMaterial49 color={props.nodes[0]} />
+                <instances.GeoSphereMaterial49
+                  color={ colliderColor ? "red" : colliderColor ? "red" : props.nodes[0]}
+                />
               </group>
               <group position={[0.26, 1.44, -0.76]} scale={0.07}>
-                <instances.GeoSphereMaterial50 color={props.nodes[0]} />
+                <instances.GeoSphereMaterial50
+                  color={ colliderColor ? "red" : colliderColor ? "red" : props.nodes[0]}
+                />
               </group>
               <group position={[-0.24, 1.42, -0.75]} scale={0.07}>
-                <instances.GeoSphereMaterial51 color={props.nodes[0]} />
+                <instances.GeoSphereMaterial51
+                  color={ colliderColor ? "red" : colliderColor ? "red" : props.nodes[0]}
+                />
               </group>
               <group position={[-0.71, 1.26, -0.75]} scale={0.07}>
-                <instances.GeoSphereMaterial52 color={props.nodes[0]} />
+                <instances.GeoSphereMaterial52
+                  color={ colliderColor ? "red" : colliderColor ? "red" : props.nodes[0]}
+                />
               </group>
               <group position={[-1.1, 0.93, -0.75]} scale={0.07}>
                 <instances.GeoSphereMaterial53 />
               </group>
               <group position={[-1.35, 0.5, -0.75]} scale={0.07}>
-                <instances.GeoSphereMaterial54 color={props.nodes[0]} />
+                <instances.GeoSphereMaterial54
+                  color={ colliderColor ? "red" : colliderColor ? "red" : props.nodes[0]}
+                />
               </group>
               <group position={[-1.44, 0.01, -0.75]} scale={0.07}>
-                <instances.GeoSphereMaterial55 color={props.nodes[0]} />
+                <instances.GeoSphereMaterial55
+                  color={ colliderColor ? "red" : colliderColor ? "red" : props.nodes[0]}
+                />
               </group>
               <group position={[0.73, 1.26, -0.75]} scale={0.07}>
-                <instances.GeoSphereMaterial56 color={props.nodes[0]} />
+                <instances.GeoSphereMaterial56
+                  color={ colliderColor ? "red" : colliderColor ? "red" : props.nodes[0]}
+                />
               </group>
               <group position={[1.11, 0.94, -0.75]} scale={0.07}>
-                <instances.GeoSphereMaterial57 color={props.nodes[0]} />
+                <instances.GeoSphereMaterial57
+                  color={ colliderColor ? "red" : colliderColor ? "red" : props.nodes[0]}
+                />
               </group>
               <group position={[1.36, 0.5, -0.75]} scale={0.07}>
-                <instances.GeoSphereMaterial58 color={props.nodes[0]} />
+                <instances.GeoSphereMaterial58
+                  color={ colliderColor ? "red" : colliderColor ? "red" : props.nodes[0]}
+                />
               </group>
               <group position={[1.45, 0.01, -0.75]} scale={0.07}>
-                <instances.GeoSphereMaterial59 color={props.nodes[0]} />
+                <instances.GeoSphereMaterial59
+                  color={ colliderColor ? "red" : colliderColor ? "red" : props.nodes[0]}
+                />
               </group>
               <group position={[-0.41, -0.07, 1.72]} scale={0.07}>
-                <instances.GeoSphereMaterial60 color={props.nodes[0]} />
+                <instances.GeoSphereMaterial60
+                  color={ colliderColor ? "red" : colliderColor ? "red" : props.nodes[0]}
+                />
               </group>
               <group position={[-0.41, 0.08, 1.71]} scale={0.07}>
-                <instances.GeoSphereMaterial61 color={props.nodes[0]} />
+                <instances.GeoSphereMaterial61
+                  color={ colliderColor ? "red" : colliderColor ? "red" : props.nodes[0]}
+                />
               </group>
               <group position={[-0.36, 0.22, 1.73]} scale={0.07}>
-                <instances.GeoSphereMaterial62 color={props.nodes[0]} />
+                <instances.GeoSphereMaterial62
+                  color={ colliderColor ? "red" : colliderColor ? "red" : props.nodes[0]}
+                />
               </group>
               <group position={[-0.26, 0.33, 1.72]} scale={0.07}>
-                <instances.GeoSphereMaterial63 color={props.nodes[0]} />
+                <instances.GeoSphereMaterial63
+                  color={ colliderColor ? "red" : colliderColor ? "red" : props.nodes[0]}
+                />
               </group>
               <group position={[-0.14, 0.4, 1.67]} scale={0.07}>
-                <instances.GeoSphereMaterial64 color={props.nodes[0]} />
+                <instances.GeoSphereMaterial64
+                  color={ colliderColor ? "red" : colliderColor ? "red" : props.nodes[0]}
+                />
               </group>
               <group position={[0.01, 0.43, 1.71]} scale={0.07}>
-                <instances.GeoSphereMaterial65 color={props.nodes[0]} />
+                <instances.GeoSphereMaterial65
+                  color={ colliderColor ? "red" : colliderColor ? "red" : props.nodes[0]}
+                />
               </group>
               <group position={[0.15, 0.4, 1.71]} scale={0.07}>
-                <instances.GeoSphereMaterial66 color={props.nodes[0]} />
+                <instances.GeoSphereMaterial66
+                  color={ colliderColor ? "red" : colliderColor ? "red" : props.nodes[0]}
+                />
               </group>
               <group position={[0.28, 0.33, 1.73]} scale={0.07}>
-                <instances.GeoSphereMaterial67 color={props.nodes[0]} />
+                <instances.GeoSphereMaterial67
+                  color={ colliderColor ? "red" : colliderColor ? "red" : props.nodes[0]}
+                />
               </group>
               <group position={[0.37, 0.22, 1.7]} scale={0.07}>
-                <instances.GeoSphereMaterial68 color={props.nodes[0]} />
+                <instances.GeoSphereMaterial68
+                  color={ colliderColor ? "red" : colliderColor ? "red" : props.nodes[0]}
+                />
               </group>
               <group position={[0.42, 0.08, 1.74]} scale={0.07}>
-                <instances.GeoSphereMaterial69 color={props.nodes[0]} />
+                <instances.GeoSphereMaterial69
+                  color={ colliderColor ? "red" : colliderColor ? "red" : props.nodes[0]}
+                />
               </group>
               <group position={[0.42, -0.07, 1.73]} scale={0.07}>
-                <instances.GeoSphereMaterial70 color={props.nodes[0]} />
+                <instances.GeoSphereMaterial70
+                  color={ colliderColor ? "red" : colliderColor ? "red" : props.nodes[0]}
+                />
               </group>
               <group position={[0.37, -0.2, 1.7]} scale={0.07}>
-                <instances.GeoSphereMaterial71 color={props.nodes[0]} />
+                <instances.GeoSphereMaterial71
+                  color={ colliderColor ? "red" : colliderColor ? "red" : props.nodes[0]}
+                />
               </group>
               <group
                 position={[1.58, 1.57, 0.2]}
                 rotation={[Math.PI / 2, -0.96, -Math.PI / 2]}
               >
                 <group position={[0.93, 0.04, 0.24]}>
-                  <instances.LineMaterial color={props.nodes[0]}/>
+                  <instances.LineMaterial
+                    color={ colliderColor ? "red" : colliderColor ? "red" : props.nodes[0]}
+                  />
                 </group>
               </group>
               <group
@@ -453,7 +630,9 @@ export function Chandelier(props) {
                 rotation={[Math.PI / 2, -0.96, -Math.PI / 2]}
               >
                 <group position={[0.93, 0.04, 0.24]}>
-                  <instances.LineMaterial color={props.nodes[0]}/>
+                  <instances.LineMaterial
+                    color={ colliderColor ? "red" : colliderColor ? "red" : props.nodes[0]}
+                  />
                 </group>
               </group>
               <group
@@ -461,7 +640,9 @@ export function Chandelier(props) {
                 rotation={[Math.PI / 2, -0.96, -Math.PI / 2]}
               >
                 <group position={[0.93, 0.04, 0.24]}>
-                  <instances.LineMaterial color={props.nodes[0]}/>
+                  <instances.LineMaterial
+                    color={ colliderColor ? "red" : colliderColor ? "red" : props.nodes[0]}
+                  />
                 </group>
               </group>
               <group
@@ -469,7 +650,9 @@ export function Chandelier(props) {
                 rotation={[Math.PI / 2, -0.96, -Math.PI / 2]}
               >
                 <group position={[0.93, 0.04, 0.24]}>
-                  <instances.LineMaterial color={props.nodes[0]}/>
+                  <instances.LineMaterial
+                    color={ colliderColor ? "red" : colliderColor ? "red" : props.nodes[0]}
+                  />
                 </group>
               </group>
               <group
@@ -477,7 +660,9 @@ export function Chandelier(props) {
                 rotation={[Math.PI / 2, -0.96, -Math.PI / 2]}
               >
                 <group position={[0.93, 0.04, 0.24]}>
-                  <instances.LineMaterial color={props.nodes[0]}/>
+                  <instances.LineMaterial
+                    color={ colliderColor ? "red" : colliderColor ? "red" : props.nodes[0]}
+                  />
                 </group>
               </group>
               <group
@@ -485,7 +670,9 @@ export function Chandelier(props) {
                 rotation={[Math.PI / 2, -0.96, -Math.PI / 2]}
               >
                 <group position={[0.93, 0.04, 0.24]}>
-                  <instances.LineMaterial color={props.nodes[0]}/>
+                  <instances.LineMaterial
+                    color={ colliderColor ? "red" : colliderColor ? "red" : props.nodes[0]}
+                  />
                 </group>
               </group>
               <group
@@ -494,7 +681,9 @@ export function Chandelier(props) {
                 scale={0.97}
               >
                 <group position={[0, 1.94, 0]}>
-                  <instances.BougeoiresMaterial color={props.nodes[0]}/>
+                  <instances.BougeoiresMaterial
+                    color={ colliderColor ? "red" : colliderColor ? "red" : props.nodes[0]}
+                  />
                 </group>
               </group>
               <group
@@ -503,7 +692,9 @@ export function Chandelier(props) {
                 scale={0.97}
               >
                 <group position={[0, 1.94, 0]}>
-                  <instances.BougiescireMaterial color={props.nodes[0]}/>
+                  <instances.BougiescireMaterial
+                    color={ colliderColor ? "red" : colliderColor ? "red" : props.nodes[0]}
+                  />
                 </group>
               </group>
               <group
@@ -512,7 +703,9 @@ export function Chandelier(props) {
                 scale={0.97}
               >
                 <group position={[0, 1.94, 0]}>
-                  <instances.BougiesflammeMaterial color={props.nodes[0]}/>
+                  <instances.BougiesflammeMaterial
+                    color={ colliderColor ? "red" : colliderColor ? "red" : props.nodes[0]}
+                  />
                 </group>
               </group>
               <group
@@ -521,25 +714,31 @@ export function Chandelier(props) {
                 scale={1.31}
               >
                 <group position={[0.65, 0.02, 0.21]}>
-                  <instances.LineMaterial color={props.nodes[0]}/>
+                  <instances.LineMaterial
+                    color={ colliderColor ? "red" : colliderColor ? "red" : props.nodes[0]}
+                  />
                 </group>
               </group>
               <group position={[0.01, 0.01, -2.13]}>
-                <instances.CylinderMaterial color={props.nodes[0]}/>
+                <instances.CylinderMaterial
+                  color={ colliderColor ? "red" : colliderColor ? "red" : props.nodes[0]}
+                />
               </group>
               <group
                 position={[0.01, 2.23, 0.2]}
                 rotation={[Math.PI / 2, -0.96, -Math.PI / 2]}
               >
                 <group position={[0.93, 0.04, 0.24]}>
-                  <instances.LineMaterial color={props.nodes[0]}/>
+                  <instances.LineMaterial
+                    color={ colliderColor ? "red" : colliderColor ? "red" : props.nodes[0]}
+                  />
                 </group>
               </group>
             </group>
           </group>
         </group>
       </group>
-      {active && (
+      {transformController && (
         <ObjectTransformControls
           id={props.objectId}
           object={objectRef.current}
@@ -549,4 +748,4 @@ export function Chandelier(props) {
   );
 }
 
-useGLTF.preload("/chandelier-transformed.glb");
+// useGLTF.preload("/chandelier-transformed.glb");

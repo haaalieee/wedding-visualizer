@@ -73,4 +73,4 @@ export function WineGlass(props) {
   );
 }
 
-useGLTF.preload("/wine_glass-transformed.glb");
+// useGLTF.preload("/wine_glass-transformed.glb");

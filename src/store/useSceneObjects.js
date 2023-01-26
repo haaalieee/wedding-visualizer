@@ -103,9 +103,9 @@ export const useSceneObjects = create((set, get) => ({
             newChildren[
               activeChildObjectIndex
             ].instance.current.material.color = {
-              r: color.r/255,
-              g: color.g/255,
-              b: color.b/255,
+              r: color.r / 255,
+              g: color.g / 255,
+              b: color.b / 255,
             };
           }
           return {
@@ -137,6 +137,15 @@ export const useTransformStore = create((set) => ({
   setTransformUpdate: (isTransform) => {
     set({
       transformUpdate: isTransform,
+    });
+  },
+}));
+
+export const useCameraOrbitStore = create((set) => ({
+  cameraOrbit: true,
+  setCameraOrbitUpdate: (isOrbitting) => {
+    set({
+      cameraOrbit: isOrbitting,
     });
   },
 }));

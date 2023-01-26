@@ -11,7 +11,7 @@ export default function CameraController() {
       camPosition: {
         value: {
           x: 0, //20
-          y: 18, //40
+          y: 12, //40
           z: 33, //20
         },
         min: -1000,

@@ -1,3 +1,4 @@
+export * from "./SceneChairsObjectList";
 export * from "./SceneChandelierObjectList";
 export * from "./SceneDiningSetObjectList";
 export * from "./SceneFairyLightsObjectList";

@@ -11,8 +11,7 @@ title: Fairy Lights
 */
 
 import { Merged, useGLTF } from "@react-three/drei";
-import React, { createContext, useContext, useMemo, useRef } from "react";
-import { useToggle } from "react-use";
+import React, { createContext, useContext, useMemo, useRef, useState } from "react";
 import ObjectTransformControls from "../components/ObjectTransformControls";
 import { sceneActions, sceneStateStore } from "../store/sceneData";
 
@@ -48,37 +47,42 @@ export function FairyLightsInstances({ children, ...props }) {
 export function FairyLights(props) {
   const instances = useContext(context);
 
-  const [active, toggleActive] = useToggle(false);
+  // const [active, toggleActive] = useToggle(false);
 
   const objectRef = useRef();
+
+  const [transformController, setTransformController] = useState(false);
 
   return (
     <>
       <group
-        {...props}
+         {...props}
         dispose={null}
-        onClick={(e) => {
+        onClick={() => {
+          setTransformController(true);
+        }}
+        onPointerMissed={() => {
+          // e.type === "click" && toggleActive(false);
+          sceneActions.removeActiveObject();
+          console.log(sceneStateStore);
+
+          setTransformController(false);
+        }}
+        onDoubleClick={(e) => {
           e.stopPropagation();
-          // setActiveObject(props.objectId);
-          // setActiveChildObject(props.objectId, e.object.uuid);
-          // setTransformUpdate(true);
+
           sceneActions.setActiveObject(props.objectId);
           // console.log(e.object.instance.current.material.name)
           sceneActions.setActiveMaterial(
             e.object.instance.current.material.name
           );
-          toggleActive(true);
+
+          setTransformController(false);
+          // toggleActive(true);
         }}
-        onPointerMissed={(e) => {
-          e.type === "click" && toggleActive(false);
-          sceneActions.removeActiveObject();
-          console.log(sceneStateStore);
-          // rmActiveObject(props.objectId);
-          // setTransformUpdate(false);
-        }}
-        position={[0, 0, 0]}
-        rotation={[0, 0, 0]}
-        scale={[4, 4, 4]}
+        position={[props.position.x, props.position.y, props.position.z]}
+        rotation={[props.rotation.x, props.rotation.y, props.rotation.z]}
+        scale={[props.scale.x, props.scale.y, props.scale.z]}
         ref={objectRef}
       >
         <group rotation={[-Math.PI / 2, 0, 0]}>
@@ -104,7 +108,7 @@ export function FairyLights(props) {
           </group>
         </group>
       </group>
-      {active && (
+      {transformController && (
         <ObjectTransformControls
           id={props.objectId}
           object={objectRef.current}
@@ -114,4 +118,4 @@ export function FairyLights(props) {
   );
 }
 
-useGLTF.preload("/fairy_lights-transformed.glb");
+// useGLTF.preload("/fairy_lights-transformed.glb");
