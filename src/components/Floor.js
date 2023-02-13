@@ -1,7 +1,7 @@
 /* eslint-disable react/no-unknown-property */
-import { useHelper } from "@react-three/drei";
+// import { useHelper } from "@react-three/drei";
 import React, { useEffect, useRef } from "react";
-import { Box3Helper } from "three";
+// import { Box3Helper } from "three";
 
 export default function Floor() {
   const floorRef = useRef();
@@ -11,7 +11,7 @@ export default function Floor() {
     bbFloorRef.current?.setFromObject(floorRef.current);
   }, [bbFloorRef, floorRef]);
 
-  useHelper(bbFloorRef, Box3Helper, "cyan");
+  // useHelper(bbFloorRef, Box3Helper, "cyan");
 
   return (
     <box3 ref={bbFloorRef}>

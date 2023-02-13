@@ -1,10 +1,12 @@
 import { PerspectiveCamera } from "@react-three/drei";
-import { useFrame } from "@react-three/fiber";
+import { useFrame, useThree } from "@react-three/fiber";
 import { useControls } from "leva";
-import React from "react";
-
+import React, { useRef } from "react";
 
 export default function CameraController() {
+  const { camera } = useThree();
+  const persCam = useRef();
+
   const [{ camPosition, camFov, camLookAt }] = useControls(
     "Camera Settings",
     () => ({
@@ -21,7 +23,7 @@ export default function CameraController() {
       camLookAt: {
         value: {
           x: 0.3,
-          y: 3.5, //32 
+          y: 3.5, //32
           z: 0,
         },
         min: -100,
@@ -37,9 +39,9 @@ export default function CameraController() {
     })
   );
 
-  useFrame((state) => {
-    state.camera.lookAt(camLookAt.x, camLookAt.y, camLookAt.z);
-    state.camera.updateProjectionMatrix();
+  useFrame(() => {
+    camera.lookAt(camLookAt.x, camLookAt.y, camLookAt.z);
+    camera.updateProjectionMatrix();
   });
 
   return (
@@ -47,6 +49,7 @@ export default function CameraController() {
       makeDefault
       position={[camPosition.x, camPosition.y, camPosition.z]}
       fov={camFov}
+      ref={persCam}
     />
   );
 }

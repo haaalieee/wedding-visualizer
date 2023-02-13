@@ -7,7 +7,7 @@ export const sceneStateStore = proxy({
   current: {
     id: null,
     material: null,
-    texture: null
+    texture: null,
   },
   sceneObjects: proxyMap([]),
 });
