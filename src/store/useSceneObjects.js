@@ -132,15 +132,6 @@ export const useSceneObjects = create((set, get) => ({
     })),
 }));
 
-export const useTransformStore = create((set) => ({
-  transformUpdate: false,
-  setTransformUpdate: (isTransform) => {
-    set({
-      transformUpdate: isTransform,
-    });
-  },
-}));
-
 export const useCameraOrbitStore = create((set) => ({
   cameraOrbit: true,
   setCameraOrbitUpdate: (isOrbitting) => {

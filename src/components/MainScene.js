@@ -11,7 +11,9 @@ import {
   FairyLightsInstances,
   TableFlowersInstances
 } from "../models";
-import { cameraOrbitStateStore, sceneStateStore } from "../store/sceneData";
+import {
+  cameraOrbitStateStore, canvasPointerStateStore, sceneStateStore
+} from "../store/sceneData";
 import CameraController from "./CameraController";
 import Floor from "./Floor";
 import Loader from "./Loader";
@@ -44,7 +46,7 @@ export default function MainScene() {
 
   /** Get orbit camera props from store */
   const cameraState = useSnapshot(cameraOrbitStateStore);
-  
+
   return (
     <Canvas
       camera={{
@@ -52,6 +54,13 @@ export default function MainScene() {
         near: 0.1,
         far: 200,
         position: [-4, 3, 6],
+      }}
+      /** Listener when pointer or cursor leaves or enter the canvas */
+      onPointerLeave={() => {
+        canvasPointerStateStore.pointerActive = false;
+      }}
+      onPointerEnter={() => {
+        canvasPointerStateStore.pointerActive = true;
       }}
       shadows
     >

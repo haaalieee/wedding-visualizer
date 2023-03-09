@@ -16,6 +16,7 @@ export default function SideDrawer() {
   // );
   // console.log("sceneObjects", sceneObjects);
   const roomSnap = useSnapshot(roomStateStore);
+  // const activeObjectSnap = useSnapshot(sceneStateStore.current);
 
   return (
     <Container
@@ -27,7 +28,7 @@ export default function SideDrawer() {
         left: 0,
         height: "100%",
         backgroundColor: "white",
-        zIndex: '2000'
+        zIndex: "2000",
       }}
     >
       <Heading size="md">Assets</Heading>
@@ -35,8 +36,9 @@ export default function SideDrawer() {
         {objectData.map((object, key) => (
           <WrapItem key={key}>
             <ItemCard
+              objectType={object.type}
               text={object.name}
-              onClick={() => {
+              onAdd={() => {
                 // if (sceneObjects.includes(key)) {
                 //   setActiveObject(null, null);
                 //   rmSceneObject(key);
@@ -45,6 +47,10 @@ export default function SideDrawer() {
                 // addSceneObject(object);
                 sceneActions.addObject(object);
                 console.log(sceneStateStore);
+              }}
+              onRemove={() => {
+                sceneActions.removeLatestAddedObject(object);
+                // sceneActions.removeObject(activeObjectSnap.id)
               }}
             />
           </WrapItem>

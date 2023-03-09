@@ -54,6 +54,33 @@ export const sceneActions = {
     });
   },
 
+  removeObject(id) {
+    sceneStateStore.sceneObjects.delete(id);
+
+    console.log(sceneStateStore.sceneObjects);
+    return sceneStateStore.sceneObjects;
+  },
+
+  removeLatestAddedObject(object) {
+    const currentObjectType = Array.from(
+      sceneStateStore.sceneObjects.values()
+    ).filter((currentObj) => currentObj.type == object.type);
+
+    const lastAddedObject = currentObjectType[currentObjectType.length - 1].id;
+
+    if (lastAddedObject !== 0) {
+      sceneStateStore.sceneObjects.delete(lastAddedObject);
+    }
+  },
+
+  getObjectTypeTotal(object) {
+    const currentObjectType = Array.from(
+      sceneStateStore.sceneObjects.values()
+    ).filter((currentObj) => currentObj.type == object);
+
+    return currentObjectType.length;
+  },
+
   saveScene(id) {
     const object = sceneStateStore.sceneObjects.get(id);
     console.log(object);
@@ -136,6 +163,14 @@ export const loaderStateStore = proxy({
 
 export const cameraOrbitStateStore = proxy({
   orbitCameraEnabled: true,
+});
+
+export const transformControlStateStore = proxy({
+  globalTransformEnabled: false,
+});
+
+export const canvasPointerStateStore = proxy({
+  pointerActive: false,
 });
 
 export const sceneObjectBounds = derive({

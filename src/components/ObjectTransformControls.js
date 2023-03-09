@@ -11,7 +11,6 @@ export default function ObjectTransformControls({
   onTransformChange,
   onTransformEnd,
 }) {
-
   /** Change transform mode when keys are triggered */
   const [transformMode, setTransformMode] = React.useState("translate");
 
@@ -51,23 +50,23 @@ export default function ObjectTransformControls({
 
   return (
     <>
-      <TransformControls
-        object={object}
-        mode={transformMode}
-        translationSnap={0.5}
-        scaleSnap={0.5}
-        rotationSnap={0.5}
-        onMouseDown={() => {
-          onTransformEnd();
-          setTriggerUpdate(true);
-        }}
-        onPointerMissed={() => {
-          setTriggerUpdate(false);
-        }}
-        onChange={
-          onTransformChange
-        }
-      />
+      {currentObject && (
+        <TransformControls
+          object={object}
+          mode={transformMode}
+          translationSnap={0.5}
+          scaleSnap={0.5}
+          rotationSnap={0.5}
+          onMouseDown={() => {
+            onTransformEnd();
+            setTriggerUpdate(true);
+          }}
+          onPointerMissed={() => {
+            setTriggerUpdate(false);
+          }}
+          onChange={onTransformChange}
+        />
+      )}
     </>
   );
 }
